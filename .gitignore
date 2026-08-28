@@ -1,0 +1,97 @@
+# === Python ===
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+env/
+.python-version
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# === Node / Frontend / Website ===
+node_modules/
+*.tsbuildinfo
+
+# Build outputs
+frontend/dist/
+
+# === Terraform ===
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.backup
+terraform/.terraform.lock.hcl
+terraform/terraform.tfvars
+terraform/crash.log
+terraform/.build/
+terraform/tfplan
+
+# === Docker ===
+pgdata/
+redisdata/
+
+# === Environment / Secrets ===
+# Everything except the checked-in template. Deny-by-default so a new
+# .env.<something> can never be committed by accident.
+.env
+.env.*
+!.env.example
+*.env
+
+# Credentials and keys of any kind
+secrets/
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+service-account*.json
+
+# Auto-generated development secrets
+.numen-dev-secrets.json
+
+# Local scratch space - never committed
+scratch/
+.local/
+
+# === IDE ===
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# === OS ===
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# === Design ===
+*.pen
+
+# === Claude Code ===
+.claude/worktrees/
+.claude/settings.json
+
+# === Misc ===
+*.log
+*.bak
+*.tmp

@@ -1,0 +1,51 @@
+# Build artifacts
+node_modules/
+dist/
+build/
+*.pyc
+__pycache__/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+*.egg-info/
+
+# Environment (NEVER read)
+.env
+.env.*
+!.env.example
+
+# Assets agents don't need
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+*.woff
+*.woff2
+*.ttf
+*.eot
+
+# Logs
+*.log
+logs/
+
+# IDE
+.vscode/
+.idea/
+
+# Frozen directories
+website/
+
+# Lock files (large, low signal)
+package-lock.json
+
+# Docker volumes
+pgdata/
+redisdata/
+
+# Worktrees
+.claude/worktrees/
+
+# Generated files
+frontend/src/types/api.generated.ts

@@ -1,0 +1,33 @@
+name: Feature request
+description: Suggest something Numen should do
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you hitting
+      description: >
+        Describe the situation, not the solution. What were you trying to find
+        out or get done, and what made it hard?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you have in mind
+      description: Optional. If you already have a shape in mind, describe it.
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What you do today instead
+      description: Optional, but it says a lot about how much this matters.
+
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Before you file
+      options:
+        - label: I have searched existing issues and discussions
+          required: true

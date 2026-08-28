@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question or idea
+    url: https://github.com/YOUR-ORG/numen/discussions
+    about: Ask about setup, self-hosting, or how something works.
+  - name: Security vulnerability
+    url: https://github.com/YOUR-ORG/numen/security/advisories/new
+    about: Report privately. Please never open a public issue for these.

@@ -1,0 +1,303 @@
+{
+  "name": "get_context_recall_synthetic_v1",
+  "description": "30 synthetic queries across feature_lookup / task_lookup / cross_doc / negative categories. Negative queries assert the retriever does NOT hallucinate hits for off-topic prompts. Replace expected_doc_ids with real chunks from your own labeled corpus to get meaningful precision.",
+  "queries": [
+    {
+      "id": "eval_001",
+      "category": "feature_lookup",
+      "task": "how does the auth flow handle token refresh",
+      "expected_doc_ids": [
+        "6fb80099-e719-538c-bc15-865ac50fbb52",
+        "f41f4565-e3dc-53b7-b768-52018686ac7d"
+      ],
+      "min_recall_at_10": 0.5
+    },
+    {
+      "id": "eval_002",
+      "category": "feature_lookup",
+      "task": "explain the PRD synthesis pipeline end-to-end",
+      "expected_doc_ids": [
+        "1ce6d530-70b6-51cc-9f8e-2ef8c29987b5",
+        "23c9ec71-6360-56c4-96ad-cebe8974eb6f",
+        "dfe799b1-7833-5a0c-a604-75d853f6b572"
+      ],
+      "min_recall_at_10": 0.5
+    },
+    {
+      "id": "eval_003",
+      "category": "feature_lookup",
+      "task": "what does the wiki regenerator do when a feature drifts",
+      "expected_doc_ids": [
+        "ff78ecc5-635d-5441-ac76-f7eba1a437fc",
+        "a210ef0e-50ae-5fbb-a96a-d9c87ab90f84"
+      ],
+      "min_recall_at_10": 0.5
+    },
+    {
+      "id": "eval_004",
+      "category": "feature_lookup",
+      "task": "describe the agent dispatch flow from task to worktree",
+      "expected_doc_ids": [
+        "cdb56cfa-3622-5f05-b0ec-b29520b64b33",
+        "9f302d4d-2114-5c93-942c-4fe356c3dc95",
+        "2d826c75-6561-52f2-b73e-01b0173b422d"
+      ],
+      "min_recall_at_10": 0.5
+    },
+    {
+      "id": "eval_005",
+      "category": "feature_lookup",
+      "task": "how do we score urgency for tasks",
+      "expected_doc_ids": [
+        "ab4ea037-2227-5e01-8409-486af82959c0",
+        "90c51e56-4e97-5176-a92e-260e84cf23db"
+      ],
+      "min_recall_at_10": 0.5
+    },
+    {
+      "id": "eval_006",
+      "category": "feature_lookup",
+      "task": "what's the architecture for the briefing scheduler",
+      "expected_doc_ids": [
+        "2a655a11-b6e0-5f53-b802-1408a46b73e1",
+        "4e076a3c-1805-5084-a6d8-5828bce89b04"
+      ],
+      "min_recall_at_10": 0.5
+    },
+    {
+      "id": "eval_007",
+      "category": "feature_lookup",
+      "task": "explain how multi-tenant isolation works at the SQL layer",
+      "expected_doc_ids": [
+        "0d2e122d-af28-5749-ab05-ba9d2d04bc39",
+        "e627c80e-cc12-5330-8170-a87fc72dfb25"
+      ],
+      "min_recall_at_10": 0.5
+    },
+    {
+      "id": "eval_008",
+      "category": "feature_lookup",
+      "task": "walk through the observability middleware for MCP calls",
+      "expected_doc_ids": [
+        "93c3c034-7611-5f7b-9774-d4e739e6641d",
+        "8881cc79-08a1-5415-9b1e-bd754e05d699"
+      ],
+      "min_recall_at_10": 0.5
+    },
+    {
+      "id": "eval_009",
+      "category": "task_lookup",
+      "task": "fix the rate-limit issue with notion sync",
+      "expected_doc_ids": [
+        "f32900c1-5165-5935-98ac-4045dce993fc"
+      ],
+      "min_recall_at_10": 0.5
+    },
+    {
+      "id": "eval_010",
+      "category": "task_lookup",
+      "task": "add support for cursor MCP setup in the frontend",
+      "expected_doc_ids": [
+        "1963ad41-97c2-5ff0-8d21-b486ee70dfcf"
+      ],
+      "min_recall_at_10": 0.5
+    },
+    {
+      "id": "eval_011",
+      "category": "task_lookup",
+      "task": "debug why briefings stopped delivering for org X",
+      "expected_doc_ids": [
+        "1dc60a47-6b36-5e91-a7c1-2acdc7276361"
+      ],
+      "min_recall_at_10": 0.5
+    },
+    {
+      "id": "eval_012",
+      "category": "task_lookup",
+      "task": "the auth flow on iOS 16 needs a passkey fallback",
+      "expected_doc_ids": [
+        "2825ac34-3ed4-58f2-8e73-f002501cfa48",
+        "4b4bc4fd-c6de-5379-ba1d-77371c8afa54"
+      ],
+      "min_recall_at_10": 0.5
+    },
+    {
+      "id": "eval_013",
+      "category": "task_lookup",
+      "task": "connector OAuth refresh tokens are expiring early",
+      "expected_doc_ids": [
+        "843cec90-751c-59d1-8712-0c984219b706"
+      ],
+      "min_recall_at_10": 0.5
+    },
+    {
+      "id": "eval_014",
+      "category": "task_lookup",
+      "task": "kanban board misses the bottom row when scrolled",
+      "expected_doc_ids": [
+        "02ecdf8e-22c6-5826-b8d9-75a07604df4e"
+      ],
+      "min_recall_at_10": 0.5
+    },
+    {
+      "id": "eval_015",
+      "category": "task_lookup",
+      "task": "write the recall@10 eval suite for get_context",
+      "expected_doc_ids": [
+        "058cc5e6-9aea-5d29-9a8b-b4478175ef3f"
+      ],
+      "min_recall_at_10": 0.5
+    },
+    {
+      "id": "eval_016",
+      "category": "task_lookup",
+      "task": "ship the PRD proposal frontend page",
+      "expected_doc_ids": [
+        "b6b20150-51a9-58e7-876c-febf911e15cc"
+      ],
+      "min_recall_at_10": 0.5
+    },
+    {
+      "id": "eval_017",
+      "category": "cross_doc",
+      "task": "how does live PR state link back to the task lifecycle pipeline",
+      "expected_doc_ids": [
+        "b4406425-c254-51a4-b4e3-e3d29b85bc9f",
+        "c18719b5-74fc-557d-9a51-1762c27984a7",
+        "b06edd9f-cdd9-53ca-ada1-2652a21739c8"
+      ],
+      "min_recall_at_10": 0.5
+    },
+    {
+      "id": "eval_018",
+      "category": "cross_doc",
+      "task": "relationship between wiki features and the source PRDs",
+      "expected_doc_ids": [
+        "2cf7fc88-dfbb-5455-9609-ea72ee0a464c",
+        "3ec6d618-aeb0-5cb3-999f-02043182c1c7",
+        "56f22815-cd40-54c1-9f49-956ebde69159"
+      ],
+      "min_recall_at_10": 0.5
+    },
+    {
+      "id": "eval_019",
+      "category": "cross_doc",
+      "task": "what happens when an agent calls update_pr_state action=merge",
+      "expected_doc_ids": [
+        "dc70ce11-a69a-5d9b-ab2f-beb47463effa",
+        "700fff1b-bc0d-5767-aca4-06ff104ed628"
+      ],
+      "min_recall_at_10": 0.5
+    },
+    {
+      "id": "eval_020",
+      "category": "cross_doc",
+      "task": "from find_matching_task to create_task: full sequence",
+      "expected_doc_ids": [
+        "c7be06cd-efce-5265-82e3-f78cee3b11d5",
+        "467e7816-2864-54b7-9821-0d3fa66ea257"
+      ],
+      "min_recall_at_10": 0.5
+    },
+    {
+      "id": "eval_021",
+      "category": "cross_doc",
+      "task": "connector sync triggering wiki regeneration through PRD changes",
+      "expected_doc_ids": [
+        "06fc6f3b-932c-5f7c-916c-58627aa1f288",
+        "8c4e4c3b-1841-59df-8891-82adcac34f28",
+        "258f5dcf-0ee0-5d32-b994-be62355e7307"
+      ],
+      "min_recall_at_10": 0.5
+    },
+    {
+      "id": "eval_022",
+      "category": "cross_doc",
+      "task": "error envelope flow from service to MCP tool to docs",
+      "expected_doc_ids": [
+        "36d9df2a-428c-5282-9a74-ec44b09de7a7",
+        "0579bbc8-9685-5da6-a553-780981f852e6"
+      ],
+      "min_recall_at_10": 0.5
+    },
+    {
+      "id": "eval_023",
+      "category": "negative",
+      "task": "what's the weather in tokyo today",
+      "expected_doc_ids": [],
+      "min_recall_at_10": 0.0
+    },
+    {
+      "id": "eval_024",
+      "category": "negative",
+      "task": "recommend a good pasta recipe",
+      "expected_doc_ids": [],
+      "min_recall_at_10": 0.0
+    },
+    {
+      "id": "eval_025",
+      "category": "negative",
+      "task": "translate this to spanish: hello world",
+      "expected_doc_ids": [],
+      "min_recall_at_10": 0.0
+    },
+    {
+      "id": "eval_026",
+      "category": "negative",
+      "task": "show me a tutorial on react hooks",
+      "expected_doc_ids": [],
+      "min_recall_at_10": 0.0
+    },
+    {
+      "id": "eval_027",
+      "category": "negative",
+      "task": "how do quantum computers work",
+      "expected_doc_ids": [],
+      "min_recall_at_10": 0.0
+    },
+    {
+      "id": "eval_028",
+      "category": "negative",
+      "task": "compare GPT-5 to Claude Opus 4.7 on benchmarks",
+      "expected_doc_ids": [],
+      "min_recall_at_10": 0.0
+    },
+    {
+      "id": "eval_029",
+      "category": "negative",
+      "task": "explain how Linear's GraphQL API works",
+      "expected_doc_ids": [],
+      "min_recall_at_10": 0.0
+    },
+    {
+      "id": "eval_030",
+      "category": "negative",
+      "task": "what's the population of new york city",
+      "expected_doc_ids": [],
+      "min_recall_at_10": 0.0
+    }
+  ],
+  "categories": [
+    "feature_lookup",
+    "task_lookup",
+    "cross_doc",
+    "negative"
+  ],
+  "thresholds": {
+    "feature_lookup": {
+      "recall_at_10": 0.7
+    },
+    "task_lookup": {
+      "recall_at_10": 0.7
+    },
+    "cross_doc": {
+      "recall_at_10": 0.6
+    },
+    "negative": {
+      "recall_at_10": 0.0
+    },
+    "aggregate": {
+      "recall_at_10": 0.7
+    }
+  }
+}

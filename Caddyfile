@@ -1,0 +1,6 @@
+# EC2 sits behind CloudFront, which terminates TLS. Caddy only needs to
+# accept plain HTTP from CloudFront and reverse proxy to the app.
+:80 {
+	reverse_proxy app:8000
+	encode gzip zstd
+}

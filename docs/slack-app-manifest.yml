@@ -1,0 +1,69 @@
+# Numen Slack app manifest
+#
+# Create the app in your OWN workspace: https://api.slack.com/apps -> Create New
+# App -> From an app manifest. Paste this file, replacing YOUR-NUMEN-HOST with
+# the public hostname of your Numen instance.
+#
+# Why you create it rather than installing a shared app: Slack moved
+# conversations.history to a far lower rate limit for distributed apps that are
+# not Marketplace-approved. Internal apps a workspace creates for itself keep
+# the higher limits, which is what Numen's ingestion needs. It also means the
+# bot token never leaves your infrastructure.
+#
+# Numen must be reachable from Slack for the two request URLs below. For a
+# purely internal install with no public hostname, run without them: ingestion
+# falls back to polling and the agent is unavailable in Slack.
+
+display_information:
+  name: Numen
+  description: Tells you what deserves your attention today, and why.
+  background_color: "#1b2620"
+
+features:
+  bot_user:
+    display_name: Numen
+    always_online: true
+  # Gives Numen the dedicated assistant pane rather than a plain bot DM.
+  assistant_view:
+    assistant_description: Ask about work in flight, blockers, goals and capacity.
+    suggested_prompts:
+      - title: What needs me today?
+        message: What should I work on today, and why?
+      - title: What is blocked?
+        message: What work is blocked right now, and who is it waiting on?
+      - title: Goal progress
+        message: How are our goals tracking this quarter?
+
+oauth_config:
+  scopes:
+    bot:
+      # Being addressed
+      - app_mentions:read
+      - im:history
+      - assistant:write
+      # Answering
+      - chat:write
+      - im:write
+      # Matching a Slack user to their Numen account, by email
+      - users:read
+      - users:read.email
+      # Ingestion: the work signals Numen reasons over
+      - channels:history
+      - channels:read
+      - reactions:read
+
+settings:
+  event_subscriptions:
+    request_url: https://YOUR-NUMEN-HOST/api/slack/events
+    bot_events:
+      - app_mention
+      - message.im
+      - assistant_thread_started
+      - app_context_changed
+  interactivity:
+    is_enabled: true
+    # Buttons on briefing items post here.
+    request_url: https://YOUR-NUMEN-HOST/api/slack/interactions
+  org_deploy_enabled: false
+  socket_mode_enabled: false
+  token_rotation_enabled: false

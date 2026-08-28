@@ -1,0 +1,100 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8001:8000"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://postgres:password@db:5432/numen
+      DATABASE_APP_URL: postgresql+asyncpg://numen_app:numen_app_password@db:5432/numen
+      REDIS_URL: redis://redis:6379/0
+      FALKORDB_URL: redis://falkordb:6379
+      PYTHONPATH: /app
+    volumes:
+      - ./src:/app/src
+      - ./alembic:/app/alembic
+      - ./scripts:/app/scripts
+    command: sh -c "alembic upgrade head && uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app/src"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      falkordb:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: numen
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      # init-db.sh creates the RLS-enforced numen_app role with this and
+      # exits if it is unset, which would leave the role uncreated and every
+      # scoped query unable to authenticate. Must match DATABASE_APP_URL.
+      NUMEN_APP_PASSWORD: ${NUMEN_APP_PASSWORD:-numen_app_password}
+    ports:
+      - "5499:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./scripts/init-db.sh:/docker-entrypoint-initdb.d/01-init-roles.sh
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  falkordb:
+    image: falkordb/falkordb:latest
+    ports:
+      - "6381:6379"
+    volumes:
+      - falkordata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "6379", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  falkordb-browser:
+    image: falkordb/falkordb-browser:latest
+    ports:
+      - "3001:3000"
+    environment:
+      FALKORDB_URL: redis://falkordb:6379
+    depends_on:
+      falkordb:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:3000"
+    env_file:
+      - .env
+    environment:
+      VITE_API_URL: http://localhost:8001
+    volumes:
+      - ./frontend/src:/app/src
+    depends_on:
+      - app
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  redisdata:
+  falkordata:

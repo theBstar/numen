@@ -1,0 +1,8 @@
+# Numen is an internal tool. It reads your team's tickets, code review, and
+# conversations, so nothing it serves should ever be indexed.
+#
+# If you are deploying a public marketing site from this build, replace this
+# file at deploy time rather than editing it here.
+
+User-agent: *
+Disallow: /

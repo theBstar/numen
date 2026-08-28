@@ -1,0 +1,166 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 238.7 83.5% 66.7%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 238.7 83.5% 66.7%;
+    --radius: 0.5rem;
+  }
+}
+
+:root {
+  --color-primary: #4F46E5;
+  --color-primary-light: #818CF8;
+  --color-primary-dark: #3730A3;
+  --color-surface-0: #FFFFFF;
+  --color-surface-50: #F8FAFC;
+  --color-surface-100: #F1F5F9;
+  --color-surface-200: #E2E8F0;
+  --color-surface-800: #1E293B;
+  --color-surface-900: #0F172A;
+  --sidebar-width: 260px;
+}
+
+@layer base {
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      "Helvetica Neue", Arial, sans-serif;
+  }
+
+  * {
+    @apply border-surface-200;
+  }
+}
+
+/* TipTap / ProseMirror typography - ensures formatting is visible in both
+   edit and read-only modes, even if Tailwind prose specificity is overridden */
+.ProseMirror h1 { font-size: 2.25em; font-weight: 800; line-height: 1.1; margin-top: 0; margin-bottom: 0.9em; }
+.ProseMirror h2 { font-size: 1.5em; font-weight: 700; line-height: 1.3; margin-top: 2em; margin-bottom: 1em; }
+.ProseMirror h3 { font-size: 1.25em; font-weight: 600; line-height: 1.6; margin-top: 1.6em; margin-bottom: 0.6em; }
+.ProseMirror h4 { font-size: 1em; font-weight: 600; line-height: 1.5; margin-top: 1.5em; margin-bottom: 0.5em; }
+.ProseMirror strong { font-weight: 700; color: #111827; }
+.ProseMirror em { font-style: italic; }
+.ProseMirror u { text-decoration: underline; }
+.ProseMirror s { text-decoration: line-through; }
+.ProseMirror p { margin-top: 1.25em; margin-bottom: 1.25em; }
+.ProseMirror p:first-child { margin-top: 0; }
+.ProseMirror ul { list-style-type: disc; padding-left: 1.625em; margin-top: 1.25em; margin-bottom: 1.25em; }
+.ProseMirror ol { list-style-type: decimal; padding-left: 1.625em; margin-top: 1.25em; margin-bottom: 1.25em; }
+.ProseMirror li { margin-top: 0.5em; margin-bottom: 0.5em; }
+.ProseMirror li > p { margin-top: 0.25em; margin-bottom: 0.25em; }
+.ProseMirror blockquote { border-left: 4px solid #e5e7eb; padding-left: 1em; font-style: italic; color: #4b5563; margin-top: 1.6em; margin-bottom: 1.6em; }
+.ProseMirror hr { border-top: 1px solid #e5e7eb; margin-top: 3em; margin-bottom: 3em; }
+.ProseMirror a { color: #4F46E5; text-decoration: underline; }
+.ProseMirror code { background-color: #f1f5f9; padding: 0.2em 0.4em; border-radius: 0.25rem; font-size: 0.875em; }
+.ProseMirror mark { background-color: #fef08a; border-radius: 0.125rem; padding: 0 0.125em; }
+.ProseMirror img { max-width: 100%; height: auto; border-radius: 0.5rem; margin: 1em auto; }
+.ProseMirror table { border-collapse: collapse; width: 100%; margin-top: 2em; margin-bottom: 2em; }
+.ProseMirror table td, .ProseMirror table th { border: 1px solid #e2e8f0; padding: 0.5rem 0.75rem; }
+.ProseMirror table th { background: #f8fafc; font-weight: 600; text-align: left; }
+
+/* Marketing site blog prose - dark theme typography for rendered markdown */
+@layer components {
+  .ws-prose h2 {
+    @apply font-serif text-2xl sm:text-3xl font-normal text-ws-50 mt-12 mb-4;
+  }
+  .ws-prose h3 {
+    @apply font-serif text-xl sm:text-2xl font-normal text-ws-50 mt-8 mb-3;
+  }
+  .ws-prose h4 {
+    @apply font-sans text-base sm:text-lg font-medium text-ws-50 mt-6 mb-2;
+  }
+  .ws-prose p {
+    @apply text-sm sm:text-base text-ws-200 leading-relaxed mb-4;
+  }
+  .ws-prose a {
+    @apply text-brand-light hover:text-brand underline underline-offset-2 transition-colors;
+  }
+  .ws-prose ul {
+    @apply list-disc pl-5 space-y-1 text-sm sm:text-base text-ws-200 mb-4;
+  }
+  .ws-prose ol {
+    @apply list-decimal pl-5 space-y-1 text-sm sm:text-base text-ws-200 mb-4;
+  }
+  .ws-prose li {
+    @apply leading-relaxed;
+  }
+  .ws-prose blockquote {
+    @apply border-l-2 border-brand pl-4 italic text-ws-300 my-6;
+  }
+  .ws-prose code {
+    @apply bg-ws-700 text-brand-light px-1.5 py-0.5 rounded text-xs;
+  }
+  .ws-prose pre {
+    @apply bg-ws-900 border border-ws-500 rounded-2xl p-4 overflow-x-auto my-6;
+  }
+  .ws-prose pre code {
+    @apply bg-transparent p-0;
+  }
+  .ws-prose strong {
+    @apply text-ws-50 font-medium;
+  }
+  .ws-prose em {
+    @apply text-ws-200;
+  }
+  .ws-prose hr {
+    @apply border-ws-500/30 my-8;
+  }
+  .ws-prose img {
+    @apply rounded-2xl border border-ws-500 my-6;
+  }
+  .ws-prose table {
+    @apply w-full text-sm text-ws-200 my-6;
+  }
+  .ws-prose thead {
+    @apply border-b border-ws-500;
+  }
+  .ws-prose th {
+    @apply text-left text-ws-50 font-medium py-2 px-3;
+  }
+  .ws-prose td {
+    @apply py-2 px-3 border-b border-ws-500/30;
+  }
+  .ws-prose > *:first-child {
+    @apply mt-0;
+  }
+  .ws-prose > *:last-child {
+    @apply mb-0;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-xl border border-surface-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md;
+  }
+
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-lg border border-surface-300 bg-white px-4 py-2 text-sm font-medium text-surface-700 transition-colors hover:bg-surface-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  }
+}

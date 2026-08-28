@@ -1,0 +1,76 @@
+services:
+  app:
+    image: ${ECR_REPO}:${IMAGE_TAG:-latest}
+    env_file:
+      - /etc/numen/.env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://postgres:${POSTGRES_PASSWORD}@db:5432/numen
+      DATABASE_APP_URL: postgresql+asyncpg://numen_app:${NUMEN_APP_PASSWORD}@db:5432/numen
+      REDIS_URL: redis://redis:6379/0
+      FALKORDB_URL: redis://falkordb:6379
+      PYTHONPATH: /app
+    command: sh -c "alembic upgrade head && uvicorn src.main:app --host 0.0.0.0 --port 8000"
+    expose:
+      - "8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      falkordb:
+        condition: service_healthy
+    restart: always
+
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: numen
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      NUMEN_APP_PASSWORD: ${NUMEN_APP_PASSWORD}
+    volumes:
+      - /var/lib/numen/postgres:/var/lib/postgresql/data
+      - ./scripts/init-db.sh:/docker-entrypoint-initdb.d/01-init-roles.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: always
+
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  falkordb:
+    image: falkordb/falkordb:latest
+    volumes:
+      - /var/lib/numen/falkordb:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "6379", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - app
+    restart: always
+
+volumes:
+  caddy-data:
+  caddy-config:
