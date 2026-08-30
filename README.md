@@ -10,7 +10,7 @@ questions.
 Search tools answer when you ask. Numen tells you before you ask.
 
 ```bash
-git clone https://github.com/YOUR-ORG/numen.git
+git clone https://github.com/theBstar/numen.git
 cd numen
 cp .env.example .env
 docker compose up --build

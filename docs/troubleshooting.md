@@ -158,5 +158,5 @@ Something on our side. The message has best-effort detail; check the
 server logs for the full trace if you have access.
 
 **Fix:** Retry once. If it persists, it's a bug - file at
-https://github.com/YOUR-ORG/numen/issues with the request you
+https://github.com/theBstar/numen/issues with the request you
 sent and the time it failed.

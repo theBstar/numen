@@ -6,7 +6,7 @@ project expects from a change, and the few conventions that are load-bearing.
 ## Getting set up
 
 ```bash
-git clone https://github.com/YOUR-ORG/numen.git
+git clone https://github.com/theBstar/numen.git
 cd numen
 cp .env.example .env
 docker compose up --build
