@@ -54,6 +54,17 @@ numen-mcp = "src.mcp.cli:main"
 requires = ["setuptools>=69.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
+# Numen is a flat layout whose single package is `src`, not a src-layout whose
+# packages live inside it. Without this, setuptools auto-discovery sees the
+# `src/` directory, assumes src-layout, and installs `agent`, `api`, `config`,
+# `main`, `events`, `shared` ... as top-level modules. Two things break: nothing
+# can `import src.config`, so console scripts like `alembic` and `uvicorn` fail
+# outside the repo root; and generic names like `config` and `main` shadow other
+# packages in any environment Numen is installed into.
+[tool.setuptools.packages.find]
+include = ["src*"]
+namespaces = false
+
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0.0",
