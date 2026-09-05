@@ -266,8 +266,16 @@ if settings.mcp_enabled:
         _mcp_server = create_mcp_server()
         app.mount("/mcp", _mcp_server.streamable_http_app())
         logger.info("MCP server mounted at /mcp (streamable_http)")
-    except ImportError:
-        logger.warning("MCP package not installed - skipping MCP server mount")
+    except ImportError as exc:
+        # Report what actually failed. This said "not installed" for every
+        # ImportError, so an image that had mcp 2.x - where FastMCP became
+        # MCPServer - reported a missing package and the real cause stayed
+        # hidden behind a mount that had silently stopped happening.
+        logger.warning(
+            "MCP server not mounted - %s. Numen needs mcp>=1.9,<2; "
+            "check the installed version if this is unexpected.",
+            exc,
+        )
 
 
 @app.get(

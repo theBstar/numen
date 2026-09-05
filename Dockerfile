@@ -2,7 +2,7 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-# Install system dependencies for asyncpg, pgvector, and weasyprint
+# System dependencies for asyncpg, pgvector, and weasyprint
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     libpq-dev \
@@ -13,26 +13,28 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     shared-mime-info \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies only (not the package itself)
-COPY pyproject.toml .
-RUN pip install --no-cache-dir \
-    fastapi uvicorn[standard] sqlalchemy[asyncio] asyncpg pgvector alembic \
-    httpx anthropic pydantic pydantic-settings python-dotenv itsdangerous \
-    redis[hiredis] resend authlib cryptography \
-    "pyjwt[crypto]" slowapi \
-    langchain langchain-openai langgraph \
-    "mcp[cli]>=1.9.0" \
-    falkordb \
-    aioboto3 weasyprint \
-    markdown-it-py beautifulsoup4 pyyaml openai pdfplumber
+# Dependencies come from pyproject.toml, which is the single source of truth.
+# This file used to carry its own hand-written copy of the list and it drifted:
+# the copy's mcp pin had lost the `<2` upper bound, so every image silently
+# installed the 2.x rewrite, `from mcp.server.fastmcp import FastMCP` failed,
+# and the MCP server never mounted. It also missed posthog and still installed
+# anthropic, dropped when the project moved to the OpenAI wire protocol.
+#
+# The empty package stub keeps the dependency layer cacheable: pip needs a
+# buildable tree to read the metadata, but rebuilding every dependency on each
+# source change would make development unusable. Real code arrives below.
+COPY pyproject.toml LICENSE ./
+RUN mkdir -p src && touch src/__init__.py \
+    && pip install --no-cache-dir . \
+    && rm -rf src
 
-# Copy application code
+# Application code
 COPY alembic.ini .
 COPY alembic/ alembic/
 COPY src/ src/
 COPY scripts/ scripts/
 
-# Ensure src is importable
+# /app precedes site-packages, so the mounted source wins in development
 ENV PYTHONPATH=/app
 
 CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
