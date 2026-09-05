@@ -15,7 +15,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.dependencies import get_current_user, get_db
+from src.api.dependencies import get_current_user_required, get_db
 from src.mcp.auth import create_api_key, revoke_api_key
 from src.shared.models import ApiKey, OrgMember, User
 
@@ -63,7 +63,7 @@ def _to_out(k: ApiKey) -> KeyOut:
 
 @router.get("", response_model=KeyListOut)
 async def list_my_keys(
-    user: User = Depends(get_current_user),
+    user: User = Depends(get_current_user_required),
     db: AsyncSession = Depends(get_db),
 ) -> KeyListOut:
     """List all API keys created by the calling user, across all their orgs."""
@@ -80,7 +80,7 @@ async def list_my_keys(
 @router.post("", response_model=KeyMintOut, status_code=201)
 async def mint_key(
     body: KeyCreateIn,
-    user: User = Depends(get_current_user),
+    user: User = Depends(get_current_user_required),
     db: AsyncSession = Depends(get_db),
 ) -> KeyMintOut:
     """Mint a new API key for the calling user. plaintext returned ONCE.
@@ -117,7 +117,7 @@ async def mint_key(
 @router.delete("/{key_id}", status_code=204)
 async def revoke_my_key(
     key_id: UUID,
-    user: User = Depends(get_current_user),
+    user: User = Depends(get_current_user_required),
     db: AsyncSession = Depends(get_db),
 ) -> None:
     """Revoke a specific key. Must belong to the calling user."""
@@ -138,7 +138,7 @@ async def revoke_my_key(
 @router.post("/{key_id}/rotate", response_model=KeyMintOut)
 async def rotate_my_key(
     key_id: UUID,
-    user: User = Depends(get_current_user),
+    user: User = Depends(get_current_user_required),
     db: AsyncSession = Depends(get_db),
 ) -> KeyMintOut:
     """Atomic rotate: revoke the old key, mint a new one with same name+org+expiry.

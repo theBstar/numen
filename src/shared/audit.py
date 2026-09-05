@@ -48,19 +48,27 @@ async def log_action_safely(
 ):
     """Fire-and-forget audit log. A failed write never 500s the user action.
 
+    The insert runs inside a SAVEPOINT. Swallowing the exception is not enough
+    on its own: a failed flush leaves the session in SQLAlchemy's
+    pending-rollback state, so the caller's next statement raises
+    PendingRollbackError and the request 500s anyway - which is exactly what
+    this function exists to prevent. The savepoint confines the failure so the
+    surrounding transaction survives.
+
     Still propagates CancelledError so task cancellation works.
     """
     try:
-        await log_action(
-            db,
-            org_id=org_id,
-            user_id=user_id,
-            action=action,
-            resource_type=resource_type,
-            resource_id=resource_id,
-            details=details,
-            ip_address=ip_address,
-        )
+        async with db.begin_nested():
+            await log_action(
+                db,
+                org_id=org_id,
+                user_id=user_id,
+                action=action,
+                resource_type=resource_type,
+                resource_id=resource_id,
+                details=details,
+                ip_address=ip_address,
+            )
     except asyncio.CancelledError:
         raise
     except Exception as exc:
