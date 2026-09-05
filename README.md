@@ -14,11 +14,28 @@ git clone https://github.com/theBstar/numen.git
 cd numen
 cp .env.example .env
 docker compose up --build
+
+# Create the first org, admin, and API key. The web app signs in through
+# Google OAuth, so this is how you get in before configuring one.
+docker compose exec app python scripts/bootstrap_admin.py you@company.com
 ```
 
-Open http://localhost:5173 to connect your tools and watch the graph build.
-Everything runs on your infrastructure. The only network egress is to the LLM
-endpoint you configure - and that can be a model running on your own hardware.
+That prints an API key which works immediately:
+
+```bash
+curl -s http://localhost:8001/api/ask \
+  -H "Authorization: Bearer numen_..." \
+  -H 'Content-Type: application/json' \
+  -d '{"question": "what is blocked?"}'
+```
+
+The same key connects any MCP client to `http://localhost:8001/mcp/` - the
+trailing slash is required. See [docs/agent-setup.md](docs/agent-setup.md).
+
+Open http://localhost:5173 for the web app; signing in there needs
+`GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in `.env`. Everything runs on your
+infrastructure. The only network egress is to the LLM endpoint you configure -
+and that can be a model running on your own hardware.
 
 Then move it to where your team already is:
 

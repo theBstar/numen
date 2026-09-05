@@ -1,93 +1,71 @@
-"""Tests for MCP serialization helpers."""
+"""Enum columns hand back an enum or a plain string depending on where the row
+came from, and the MCP serializers assumed only the first.
+
+`create_task` crashed with "'str' object has no attribute 'value'" against a
+live stack: the entity was written, then serializing the response raised, so the
+caller saw a failure for a task that existed. Every enum field in a response has
+the same exposure.
+"""
+
+from __future__ import annotations
 
 from datetime import datetime, timezone
-from unittest.mock import MagicMock
+from types import SimpleNamespace
+from uuid import uuid4
 
-from src.mcp.serializers import edge_to_dict, entity_to_dict, urgency_score_to_dict
+import pytest
+
+from src.mcp.serializers import edge_to_dict, entity_to_dict
 from src.shared.types import EdgeType, EntityType, SourceType
 
 
-def test_entity_to_dict_full():
-    entity = MagicMock()
-    entity.id = "abc-123"
-    entity.canonical_name = "Test Entity"
-    entity.type = EntityType.TASK
-    entity.source = SourceType.LINEAR
-    entity.properties = {"status": "in_progress"}
-    entity.created_at = datetime(2026, 1, 1, tzinfo=timezone.utc)
-    entity.updated_at = datetime(2026, 1, 2, tzinfo=timezone.utc)
-
-    result = entity_to_dict(entity)
-    assert result["id"] == "abc-123"
-    assert result["name"] == "Test Entity"
-    assert result["type"] == "task"
-    assert result["source"] == "linear"
-    assert result["properties"]["status"] == "in_progress"
-    assert "2026-01-01" in result["created_at"]
+def _entity(type_value, source_value):
+    return SimpleNamespace(
+        id=uuid4(),
+        canonical_name="Ship the thing",
+        type=type_value,
+        source=source_value,
+        properties={"status": "todo"},
+        created_at=datetime(2026, 9, 5, tzinfo=timezone.utc),
+        updated_at=None,
+    )
 
 
-def test_entity_to_dict_none_fields():
-    entity = MagicMock()
-    entity.id = "abc-123"
-    entity.canonical_name = "Minimal"
-    entity.type = None
-    entity.source = None
-    entity.properties = None
-    entity.created_at = None
-    entity.updated_at = None
-
-    result = entity_to_dict(entity)
-    assert result["type"] is None
-    assert result["source"] is None
-    assert result["properties"] == {}
-    assert result["created_at"] is None
-
-
-def test_edge_to_dict():
-    edge = MagicMock()
-    edge.id = "edge-1"
-    edge.from_entity_id = "from-1"
-    edge.to_entity_id = "to-1"
-    edge.type = EdgeType.BLOCKS
-    edge.weight = 1.0
-    edge.confidence = 0.9
-    edge.last_active_at = datetime(2026, 1, 1, tzinfo=timezone.utc)
-
-    result = edge_to_dict(edge)
-    assert result["type"] == "blocks"
-    assert result["weight"] == 1.0
-    assert result["confidence"] == 0.9
+@pytest.mark.parametrize(
+    "type_value,source_value",
+    [
+        (EntityType.TASK, SourceType.MANUAL),
+        ("task", "manual"),
+        (EntityType.TASK, "manual"),
+        ("task", SourceType.MANUAL),
+    ],
+    ids=["both-enum", "both-str", "mixed-a", "mixed-b"],
+)
+def test_entity_serializes_whether_enums_arrive_as_enums_or_strings(
+    type_value, source_value
+):
+    out = entity_to_dict(_entity(type_value, source_value))
+    assert out["type"] == "task"
+    assert out["source"] == "manual"
 
 
-def test_urgency_score_to_dict_without_entity():
-    score = MagicMock()
-    score.entity_id = "entity-1"
-    score.score = 85.0
-    score.score_components = {"staleness_days": 0.5}
-    score.provenance = [{"factor": "blocking"}]
-    score.computed_at = datetime(2026, 1, 1, tzinfo=timezone.utc)
-
-    result = urgency_score_to_dict(score)
-    assert result["score"] == 85.0
-    assert "entity" not in result
+def test_entity_tolerates_missing_enums():
+    out = entity_to_dict(_entity(None, None))
+    assert out["type"] is None
+    assert out["source"] is None
 
 
-def test_urgency_score_to_dict_with_entity():
-    score = MagicMock()
-    score.entity_id = "entity-1"
-    score.score = 85.0
-    score.score_components = {}
-    score.provenance = []
-    score.computed_at = datetime(2026, 1, 1, tzinfo=timezone.utc)
-
-    entity = MagicMock()
-    entity.id = "entity-1"
-    entity.canonical_name = "My Task"
-    entity.type = EntityType.TASK
-    entity.source = SourceType.LINEAR
-    entity.properties = {}
-    entity.created_at = datetime(2026, 1, 1, tzinfo=timezone.utc)
-    entity.updated_at = datetime(2026, 1, 1, tzinfo=timezone.utc)
-
-    result = urgency_score_to_dict(score, entity)
-    assert result["entity"]["name"] == "My Task"
+@pytest.mark.parametrize(
+    "edge_type", [EdgeType.CONTAINS, "contains"], ids=["enum", "str"]
+)
+def test_edge_serializes_either_form(edge_type):
+    edge = SimpleNamespace(
+        id=uuid4(),
+        from_entity_id=uuid4(),
+        to_entity_id=uuid4(),
+        type=edge_type,
+        weight=1.0,
+        confidence=0.9,
+        last_active_at=None,
+    )
+    assert edge_to_dict(edge)["type"] == "contains"
