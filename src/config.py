@@ -202,6 +202,19 @@ def bootstrap_dev_secrets(target: Settings | None = None, store: Path | None = N
     )
 
 
+_DEFAULT_DB_PASSWORDS = ("password", "numen_app_password")
+
+
+def _uses_default_password(url: str) -> bool:
+    """True if a SQLAlchemy URL carries one of the shipped compose passwords."""
+    if not url or "@" not in url:
+        return False
+    credentials = url.rsplit("@", 1)[0]
+    if ":" not in credentials:
+        return False
+    return credentials.rsplit(":", 1)[1] in _DEFAULT_DB_PASSWORDS
+
+
 def validate_production_config() -> None:
     """Fail-fast guardrails. Called at app startup."""
     bootstrap_dev_secrets()
@@ -228,3 +241,16 @@ def validate_production_config() -> None:
             raise RuntimeError("WEBHOOK_REQUIRED must remain True in production.")
         if not settings.encryption_key:
             raise RuntimeError("ENCRYPTION_KEY must be set in production.")
+
+        # docker-compose.yml ships these so `docker compose up` works out of the
+        # box, and it publishes the database port. Carrying either default into
+        # production hands the tenant data to anyone who can reach the host.
+        for value, var in (
+            (settings.database_url, "POSTGRES_PASSWORD"),
+            (getattr(settings, "database_app_url", "") or "", "NUMEN_APP_PASSWORD"),
+        ):
+            if _uses_default_password(value):
+                raise RuntimeError(
+                    f"{var} is still the docker-compose default. Set a real one "
+                    f"before running in production."
+                )

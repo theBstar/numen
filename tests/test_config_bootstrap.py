@@ -114,3 +114,64 @@ def test_production_still_requires_a_jwt_secret(monkeypatch):
 
     with pytest.raises(RuntimeError, match="JWT_SECRET_KEY"):
         validate_production_config()
+
+
+# ---- Shipped datastore credentials ----
+
+_PROD = dict(
+    environment="production",
+    secret_key="s" * 48,
+    jwt_secret_key="j" * 48,
+    encryption_key="e" * 44,
+)
+
+
+def test_production_rejects_the_compose_default_database_password(monkeypatch):
+    """docker-compose.yml ships `password` so the quick start works.
+
+    Carrying it into production means anyone who reaches the database port owns
+    the tenant data, and that port is published by default.
+    """
+    settings = _settings(
+        **_PROD, database_url="postgresql+asyncpg://postgres:password@db:5432/numen"
+    )
+    monkeypatch.setattr("src.config.settings", settings)
+
+    with pytest.raises(RuntimeError, match="POSTGRES_PASSWORD"):
+        validate_production_config()
+
+
+def test_production_rejects_the_default_app_role_password(monkeypatch):
+    settings = _settings(
+        **_PROD,
+        database_url="postgresql+asyncpg://postgres:strong-one@db:5432/numen",
+        database_app_url="postgresql+asyncpg://numen_app:numen_app_password@db:5432/numen",
+    )
+    monkeypatch.setattr("src.config.settings", settings)
+
+    with pytest.raises(RuntimeError, match="NUMEN_APP_PASSWORD"):
+        validate_production_config()
+
+
+def test_production_accepts_real_database_passwords(monkeypatch):
+    settings = _settings(
+        **_PROD,
+        database_url="postgresql+asyncpg://postgres:2Q9x-real@db:5432/numen",
+        database_app_url="postgresql+asyncpg://numen_app:7Kd-real@db:5432/numen",
+    )
+    monkeypatch.setattr("src.config.settings", settings)
+
+    validate_production_config()
+
+
+def test_development_still_boots_on_the_defaults(monkeypatch):
+    """The quick start must keep working - this guard is production-only."""
+    settings = _settings(
+        environment="development",
+        secret_key="s" * 48,
+        jwt_secret_key="j" * 48,
+        database_url="postgresql+asyncpg://postgres:password@db:5432/numen",
+    )
+    monkeypatch.setattr("src.config.settings", settings)
+
+    validate_production_config()

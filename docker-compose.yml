@@ -6,8 +6,10 @@ services:
     env_file:
       - .env
     environment:
-      DATABASE_URL: postgresql+asyncpg://postgres:password@db:5432/numen
-      DATABASE_APP_URL: postgresql+asyncpg://numen_app:numen_app_password@db:5432/numen
+      # Same variables the db service reads. Hardcoding the password here
+      # meant setting POSTGRES_PASSWORD broke the app instead of securing it.
+      DATABASE_URL: postgresql+asyncpg://postgres:${POSTGRES_PASSWORD:-password}@db:5432/numen
+      DATABASE_APP_URL: postgresql+asyncpg://numen_app:${NUMEN_APP_PASSWORD:-numen_app_password}@db:5432/numen
       REDIS_URL: redis://redis:6379/0
       FALKORDB_URL: redis://falkordb:6379
       PYTHONPATH: /app
@@ -33,10 +35,11 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
       # init-db.sh creates the RLS-enforced numen_app role with this and
       # exits if it is unset, which would leave the role uncreated and every
-      # scoped query unable to authenticate. Must match DATABASE_APP_URL.
+      # scoped query unable to authenticate. The app reads the same variable.
       NUMEN_APP_PASSWORD: ${NUMEN_APP_PASSWORD:-numen_app_password}
     ports:
-      - "5499:5432"
+      # Loopback only: default password, and this is the tenant data.
+      - "127.0.0.1:5499:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./scripts/init-db.sh:/docker-entrypoint-initdb.d/01-init-roles.sh
@@ -49,7 +52,8 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "6380:6379"
+      # Loopback only: no authentication.
+      - "127.0.0.1:6380:6379"
     volumes:
       - redisdata:/data
     healthcheck:
@@ -61,7 +65,8 @@ services:
   falkordb:
     image: falkordb/falkordb:latest
     ports:
-      - "6381:6379"
+      # Loopback only: no authentication, and it holds the context graph.
+      - "127.0.0.1:6381:6379"
     volumes:
       - falkordata:/data
     healthcheck:
@@ -73,7 +78,8 @@ services:
   falkordb-browser:
     image: falkordb/falkordb-browser:latest
     ports:
-      - "3001:3000"
+      # Loopback only: an unauthenticated web UI onto the whole graph.
+      - "127.0.0.1:3001:3000"
     environment:
       FALKORDB_URL: redis://falkordb:6379
     depends_on:
