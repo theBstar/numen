@@ -128,16 +128,102 @@ EMBEDDING_MODEL=nomic-embed-text
 EMBEDDING_DIMENSIONS=768
 ```
 
-### Connecting your tools
+## Rolling it out
 
-Each connector needs an OAuth app in the corresponding developer console, since
-a self-hosted install authenticates as itself rather than through a shared
-vendor app. `.env.example` lists the variables for Linear, GitHub, Slack, Jira,
-Notion, and Google. For Slack, [docs/slack-setup.md](docs/slack-setup.md) has a
-ready-made app manifest and explains why you create the app yourself.
+The quick start gives you a running instance with an empty graph. Three steps
+turn it into something your team uses.
 
-Webhooks need a publicly reachable `APP_URL`. Without one, connectors fall back
-to polling on `SYNC_INTERVAL_SECONDS`, which works fine for a local install.
+**1. Connect a tool.** Each connector needs its own OAuth app in that vendor's
+developer console, because a self-hosted install authenticates as itself rather
+than through a shared vendor app. Start with one - GitHub or Linear gives the
+fastest signal. Put the client id and secret in `.env`, restart, then connect it
+from the web app under Connections, or by visiting
+`/auth/<connector>/connect?org_id=<your-org-id>`. `.env.example` lists the
+variables for all six, and [docs/slack-setup.md](docs/slack-setup.md) has a
+ready-made manifest for Slack.
+
+**2. Wait for the first sync.** The initial backfill runs on connect; after that
+a delta sync runs every `SYNC_INTERVAL_SECONDS` (300 by default). Webhooks make
+it near-immediate but need a publicly reachable `APP_URL`; without one Numen
+falls back to polling, which is fine for an internal install. Watch progress
+with `docker compose logs -f app`. Connector status, including the last sync
+time and any error, is on the Connections page and at
+`GET /api/orgs/{org_id}/connectors`.
+
+**3. Ask it something.** Once one connector has synced, the same API key from
+the bootstrap step answers questions over real data:
+
+```bash
+curl -s http://localhost:8001/api/ask \
+  -H "Authorization: Bearer numen_..." \
+  -H 'Content-Type: application/json' \
+  -d '{"question": "what changed in the last day?"}'
+```
+
+Add more connectors from there. The value compounds: one tool is a search box,
+three is a graph that can tell you a PR is blocked on a decision in Slack.
+
+### Who can sign in
+
+`SIGNUP_MODE` decides who gets an account. The default is the permissive one,
+which is usually wrong for a company:
+
+| Mode | Who gets in |
+|---|---|
+| `open` (default) | Anyone with an email at a domain that already has an org. Suits a hosted product; on your own instance it admits anyone sharing your email domain. |
+| `domain` | Only addresses in `ALLOWED_EMAIL_DOMAINS`, and only into an org that exists. The usual choice. Exact match - `example.com` does not admit `sub.example.com`. |
+| `invite` | Nobody joins automatically. Members are added first. |
+
+Set `SIGNUP_MODE=domain` and `ALLOWED_EMAIL_DOMAINS=yourcompany.com` before you
+put this anywhere reachable.
+
+## Running it for your team
+
+`docker-compose.yml` is for evaluation: it reloads on source changes, runs the
+frontend through a dev server, and binds the datastores to loopback.
+`docker-compose.prod.yml` is the one to deploy - built images, no reload, the
+frontend compiled to static assets, and Caddy as the only service on the
+network.
+
+```bash
+# In .env:
+#   NUMEN_DOMAIN=numen.yourcompany.com
+#   APP_URL=https://numen.yourcompany.com
+#   ENVIRONMENT=production
+#   POSTGRES_PASSWORD / NUMEN_APP_PASSWORD / SECRET_KEY / JWT_SECRET_KEY / ENCRYPTION_KEY
+docker compose -f docker-compose.prod.yml up --build -d
+docker compose -f docker-compose.prod.yml exec app python scripts/bootstrap_admin.py you@company.com
+```
+
+Caddy obtains a Let's Encrypt certificate for `NUMEN_DOMAIN` automatically,
+provided ports 80 and 443 reach the host. Leave `NUMEN_DOMAIN` unset only if
+something in front already terminates TLS.
+
+`APP_URL` must match the hostname people actually use. It is not cosmetic: the
+MCP server validates the `Host` header against it, so a mismatch makes agent
+connections fail with `421 Invalid Host header`.
+
+Startup refuses to run with `ENVIRONMENT=production` while any secret or
+database password is still a shipped default.
+
+**Backups.** Numen's state is two volumes, `numen-postgres` and
+`numen-falkordb`. Back them up together - the graph references rows in Postgres,
+so a mismatched pair restores inconsistent. Redis holds only cache and is
+disposable.
+
+**Upgrades.** Pull, rebuild, restart; migrations run on boot.
+
+```bash
+git pull && docker compose -f docker-compose.prod.yml up --build -d
+```
+
+Read [CHANGELOG.md](CHANGELOG.md) first. Interfaces still change between
+releases, and a migration is not reversible - take a backup before upgrading.
+
+**Sizing.** The six services idle at roughly 340 MB of RAM in total, most of it
+the app and FalkorDB. Growth is driven by how much history you ingest rather
+than by how many people use it, so size the host against your graph, and give
+FalkorDB room - it holds the graph in memory.
 
 ## Architecture
 

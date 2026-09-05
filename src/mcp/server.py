@@ -195,15 +195,24 @@ def _build_transport_security() -> TransportSecuritySettings:
     primary = parsed.netloc or "localhost:8000"
 
     allowed_hosts: list[str] = [primary]
+
+    # A reverse proxy on 80 or 443 forwards a Host header with no port, so the
+    # port-stripped form has to be allowed too. Without it an authenticated MCP
+    # call behind any proxy returned 421 "Invalid Host header".
+    bare = primary.rsplit(":", 1)[0] if ":" in primary else primary
+    allowed_hosts.append(bare)
+
     # If running with HTTPS, also accept the apex form ("www." stripped).
-    if primary.startswith("www."):
-        allowed_hosts.append(primary[len("www.") :])
-    # Allow port wildcards for local dev (any port on localhost / 127.0.0.1).
-    allowed_hosts += ["localhost:*", "127.0.0.1:*"]
+    for host in (primary, bare):
+        if host.startswith("www."):
+            allowed_hosts.append(host[len("www.") :])
+
+    # Local development reaches the app directly on an arbitrary port.
+    allowed_hosts += ["localhost", "127.0.0.1", "localhost:*", "127.0.0.1:*"]
 
     return TransportSecuritySettings(
         enable_dns_rebinding_protection=True,
-        allowed_hosts=allowed_hosts,
+        allowed_hosts=list(dict.fromkeys(allowed_hosts)),
         allowed_origins=[],  # Origin header is not required (CLI clients omit it).
     )
 

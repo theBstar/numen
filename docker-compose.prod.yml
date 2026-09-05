@@ -1,9 +1,23 @@
+# Production stack for running Numen on your own host.
+#
+#   cp .env.example .env      # set NUMEN_DOMAIN, secrets, and an LLM endpoint
+#   docker compose -f docker-compose.prod.yml up --build -d
+#
+# Differences from docker-compose.yml, which is for evaluation only: images are
+# built rather than bind-mounted, nothing reloads, the frontend is compiled to
+# static assets instead of running a dev server, and Caddy terminates TLS and is
+# the only service exposed to the network.
+#
+# Data lives in named volumes. Back up `numen-postgres` and `numen-falkordb`
+# together - the graph references rows in Postgres.
+
 services:
   app:
-    image: ${ECR_REPO}:${IMAGE_TAG:-latest}
+    build: .
     env_file:
-      - /etc/numen/.env
+      - .env
     environment:
+      ENVIRONMENT: production
       DATABASE_URL: postgresql+asyncpg://postgres:${POSTGRES_PASSWORD}@db:5432/numen
       DATABASE_APP_URL: postgresql+asyncpg://numen_app:${NUMEN_APP_PASSWORD}@db:5432/numen
       REDIS_URL: redis://redis:6379/0
@@ -21,15 +35,26 @@ services:
         condition: service_healthy
     restart: always
 
+  frontend:
+    build:
+      context: ./frontend
+      target: prod
+      args:
+        # Empty: the browser calls the same origin Caddy serves the app on.
+        VITE_API_URL: ""
+    expose:
+      - "3000"
+    restart: always
+
   db:
     image: pgvector/pgvector:pg16
     environment:
       POSTGRES_DB: numen
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      NUMEN_APP_PASSWORD: ${NUMEN_APP_PASSWORD}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      NUMEN_APP_PASSWORD: ${NUMEN_APP_PASSWORD:?set NUMEN_APP_PASSWORD in .env}
     volumes:
-      - /var/lib/numen/postgres:/var/lib/postgresql/data
+      - numen-postgres:/var/lib/postgresql/data
       - ./scripts/init-db.sh:/docker-entrypoint-initdb.d/01-init-roles.sh:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
@@ -40,6 +65,8 @@ services:
 
   redis:
     image: redis:7-alpine
+    volumes:
+      - numen-redis:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
@@ -50,7 +77,7 @@ services:
   falkordb:
     image: falkordb/falkordb:latest
     volumes:
-      - /var/lib/numen/falkordb:/data
+      - numen-falkordb:/data
     healthcheck:
       test: ["CMD", "redis-cli", "-p", "6379", "ping"]
       interval: 5s
@@ -60,17 +87,28 @@ services:
 
   caddy:
     image: caddy:2-alpine
+    # The only service on the network. Everything else is reachable solely
+    # over the internal compose network.
     ports:
       - "80:80"
       - "443:443"
+    environment:
+      # A real hostname gets an automatic Let's Encrypt certificate. The
+      # default serves plain HTTP on :80, which is only appropriate when
+      # something in front of it already terminates TLS.
+      NUMEN_DOMAIN: ${NUMEN_DOMAIN:-:80}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - caddy-data:/data
-      - caddy-config:/config
+      - numen-caddy-data:/data
+      - numen-caddy-config:/config
     depends_on:
       - app
+      - frontend
     restart: always
 
 volumes:
-  caddy-data:
-  caddy-config:
+  numen-postgres:
+  numen-redis:
+  numen-falkordb:
+  numen-caddy-data:
+  numen-caddy-config:

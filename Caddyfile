@@ -1,6 +1,38 @@
-# EC2 sits behind CloudFront, which terminates TLS. Caddy only needs to
-# accept plain HTTP from CloudFront and reverse proxy to the app.
-:80 {
-	reverse_proxy app:8000
+# Set NUMEN_DOMAIN in .env to the hostname people will use, e.g.
+# numen.yourcompany.com. Caddy then obtains and renews a Let's Encrypt
+# certificate automatically, provided ports 80 and 443 reach this host.
+#
+# Leave NUMEN_DOMAIN unset to serve plain HTTP on :80 instead. That is correct
+# only when something in front already terminates TLS - a load balancer, a CDN,
+# or a corporate ingress. Do not expose it directly.
+
+{$NUMEN_DOMAIN} {
 	encode gzip zstd
+
+	# The API, the agent surfaces, and the MCP server.
+	# /mcp/ keeps its trailing slash: the MCP app is mounted, and /mcp alone
+	# does not reach its root route.
+	handle /api/* {
+		reverse_proxy app:8000
+	}
+	handle /mcp/* {
+		reverse_proxy app:8000
+	}
+	handle /auth/* {
+		reverse_proxy app:8000
+	}
+	handle /health {
+		reverse_proxy app:8000
+	}
+	handle /docs* {
+		reverse_proxy app:8000
+	}
+	handle /openapi.json {
+		reverse_proxy app:8000
+	}
+
+	# Everything else is the web app, which serves its own client-side routes.
+	handle {
+		reverse_proxy frontend:3000
+	}
 }
