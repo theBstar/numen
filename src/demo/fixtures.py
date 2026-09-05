@@ -42,7 +42,7 @@ PERSONS = [
     {
         "key": "alice",
         "name": "Alice Chen",
-        "email": "alice@demo.numen.team",
+        "email": "alice@demo.example.com",
         "role": "engineer",
         "title": "Senior Engineer",
         "team": "Platform",
@@ -53,7 +53,7 @@ PERSONS = [
     {
         "key": "bob",
         "name": "Bob Martinez",
-        "email": "bob@demo.numen.team",
+        "email": "bob@demo.example.com",
         "role": "engineer",
         "title": "Engineer",
         "team": "Platform",
@@ -64,7 +64,7 @@ PERSONS = [
     {
         "key": "carol",
         "name": "Carol Wu",
-        "email": "carol@demo.numen.team",
+        "email": "carol@demo.example.com",
         "role": "engineer",
         "title": "Engineer",
         "team": "Growth",
@@ -75,7 +75,7 @@ PERSONS = [
     {
         "key": "david",
         "name": "David Kim",
-        "email": "david@demo.numen.team",
+        "email": "david@demo.example.com",
         "role": "engineer",
         "title": "Engineer",
         "team": "Growth",
@@ -86,7 +86,7 @@ PERSONS = [
     {
         "key": "eve",
         "name": "Eve Patel",
-        "email": "eve@demo.numen.team",
+        "email": "eve@demo.example.com",
         "role": "pm",
         "title": "Product Manager",
         "team": "Platform",
@@ -97,7 +97,7 @@ PERSONS = [
     {
         "key": "frank",
         "name": "Frank Liu",
-        "email": "frank@demo.numen.team",
+        "email": "frank@demo.example.com",
         "role": "vp_eng",
         "title": "VP of Engineering",
         "team": "Engineering",
@@ -108,7 +108,7 @@ PERSONS = [
     {
         "key": "grace",
         "name": "Grace Zhang",
-        "email": "grace@demo.numen.team",
+        "email": "grace@demo.example.com",
         "role": "cto",
         "title": "CTO",
         "team": "Leadership",
@@ -119,7 +119,7 @@ PERSONS = [
     {
         "key": "hannah",
         "name": "Hannah Lee",
-        "email": "hannah@demo.numen.team",
+        "email": "hannah@demo.example.com",
         "role": "designer",
         "title": "Senior Designer",
         "team": "Design",
@@ -130,7 +130,7 @@ PERSONS = [
     {
         "key": "igor",
         "name": "Igor Popov",
-        "email": "igor@demo.numen.team",
+        "email": "igor@demo.example.com",
         "role": "engineer",
         "title": "Staff Engineer",
         "team": "Infrastructure",
@@ -141,7 +141,7 @@ PERSONS = [
     {
         "key": "julia",
         "name": "Julia Santos",
-        "email": "julia@demo.numen.team",
+        "email": "julia@demo.example.com",
         "role": "engineer",
         "title": "Engineer",
         "team": "Infrastructure",
@@ -152,7 +152,7 @@ PERSONS = [
     {
         "key": "kevin",
         "name": "Kevin Nguyen",
-        "email": "kevin@demo.numen.team",
+        "email": "kevin@demo.example.com",
         "role": "engineer",
         "title": "Engineer",
         "team": "Mobile",
@@ -163,7 +163,7 @@ PERSONS = [
     {
         "key": "lisa",
         "name": "Lisa Park",
-        "email": "lisa@demo.numen.team",
+        "email": "lisa@demo.example.com",
         "role": "engineer",
         "title": "Engineer",
         "team": "Mobile",

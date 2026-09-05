@@ -41,7 +41,7 @@ Supporting modules:
 ## Project Structure
 
 ```
-numen.team/
+numen/
 ├── src/
 │   ├── main.py
 │   ├── config.py

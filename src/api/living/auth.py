@@ -29,6 +29,17 @@ from src.shared.models import OrgMember, User
 
 logger = logging.getLogger(__name__)
 
+
+def build_mcp_url(app_url: str) -> str:
+    """Return the MCP endpoint URL for *app_url*, trailing slash included.
+
+    The MCP server is mounted as a sub-application, so only `/mcp/` reaches its
+    root route - `/mcp` returns 404. A client handed the slashless form fails on
+    every call, so the slash is not cosmetic.
+    """
+    return f"{app_url.rstrip('/')}/mcp/"
+
+
 router = APIRouter(prefix="/api/living/auth", tags=["living"])
 
 
@@ -273,7 +284,7 @@ async def web_sso(
     # to avoid circular imports.
     from src.config import settings
 
-    mcp_url = f"{settings.app_url.rstrip('/')}/mcp"
+    mcp_url = build_mcp_url(settings.app_url)
 
     body = {
         "client": client,

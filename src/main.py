@@ -265,7 +265,7 @@ if settings.mcp_enabled:
 
         _mcp_server = create_mcp_server()
         app.mount("/mcp", _mcp_server.streamable_http_app())
-        logger.info("MCP server mounted at /mcp (streamable_http)")
+        logger.info("MCP server mounted at /mcp/ (streamable_http)")
     except ImportError as exc:
         # Report what actually failed. This said "not installed" for every
         # ImportError, so an image that had mcp 2.x - where FastMCP became

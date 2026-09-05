@@ -265,4 +265,4 @@ def test_org_member_keys_are_person_keys():
 def test_person_by_key_lookup():
     """PERSON_BY_KEY should allow lookup by key."""
     assert PERSON_BY_KEY["alice"]["name"] == "Alice Chen"
-    assert PERSON_BY_KEY["alice"]["email"] == "alice@demo.numen.team"
+    assert PERSON_BY_KEY["alice"]["email"] == "alice@demo.example.com"

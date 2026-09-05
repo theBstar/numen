@@ -10,7 +10,7 @@ Every MCP error returns the same envelope:
     "hint": "Use search_entities or find_matching_task to discover task IDs.",
     "retryable": false,
     "suggested_next_tool": "search_entities",
-    "docs_url": "https://numen.team/docs/errors#task_not_found"
+    "docs_url": "https://docs.example.com/errors#task_not_found"
   }
 }
 ```

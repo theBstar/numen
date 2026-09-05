@@ -356,7 +356,7 @@ async def _create_new_prs(
     for i, task in enumerate(selected):
         pr_num = 310 + ref_date.toordinal() % 1000 + i
         props = task.properties or {}
-        assignee_email = props.get("assignee_email", "alice@demo.numen.team")
+        assignee_email = props.get("assignee_email", "alice@demo.example.com")
 
         # Find the person key from email
         author_key = "alice"

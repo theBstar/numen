@@ -126,3 +126,23 @@ def test_mac_sso_404_when_org_id_not_a_member():
                 follow_redirects=False,
             )
     assert r.status_code == 404
+
+
+# ---- MCP URL shape ----
+
+
+def test_paired_mcp_url_keeps_the_trailing_slash():
+    """The MCP app is mounted as a sub-app, so only `/mcp/` serves its root.
+
+    `/mcp` without the slash returns 404, verified against a running stack.
+    Handing a client the slashless URL means every tool call fails.
+    """
+    from src.api.living.auth import build_mcp_url
+
+    assert build_mcp_url("https://numen.example.com") == "https://numen.example.com/mcp/"
+
+
+def test_paired_mcp_url_does_not_double_the_slash():
+    from src.api.living.auth import build_mcp_url
+
+    assert build_mcp_url("https://numen.example.com/") == "https://numen.example.com/mcp/"
