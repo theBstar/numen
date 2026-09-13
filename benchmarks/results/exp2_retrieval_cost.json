@@ -1,0 +1,246 @@
+{
+  "experiment": "retrieval cost under oracle planning",
+  "method": "Both arms follow a hand-written optimal plan. Payloads are the real demo fixtures projected into each vendor's response shape. Linear is modelled as GraphQL, so it is credited for nested within-source fetches; goals are modelled as Linear initiatives rather than Numen-only data. Both choices favour the per-tool arm.",
+  "totals": {
+    "per_tool_calls": 21,
+    "graph_calls": 7,
+    "per_tool_bytes": 51336,
+    "graph_bytes": 17417
+  },
+  "by_hop_tier": {
+    "0": {
+      "questions": 2,
+      "per_tool_calls": 2,
+      "graph_calls": 2,
+      "per_tool_bytes": 4846,
+      "graph_bytes": 4846,
+      "calls_ratio": 1.0,
+      "bytes_ratio": 1.0
+    },
+    "1": {
+      "questions": 1,
+      "per_tool_calls": 2,
+      "graph_calls": 1,
+      "per_tool_bytes": 6558,
+      "graph_bytes": 697,
+      "calls_ratio": 2.0,
+      "bytes_ratio": 9.41
+    },
+    "2": {
+      "questions": 2,
+      "per_tool_calls": 8,
+      "graph_calls": 2,
+      "per_tool_bytes": 15987,
+      "graph_bytes": 7013,
+      "calls_ratio": 4.0,
+      "bytes_ratio": 2.28
+    },
+    "3": {
+      "questions": 2,
+      "per_tool_calls": 9,
+      "graph_calls": 2,
+      "per_tool_bytes": 23945,
+      "graph_bytes": 4861,
+      "calls_ratio": 4.5,
+      "bytes_ratio": 4.93
+    }
+  },
+  "questions": [
+    {
+      "qid": "T0-urgent",
+      "hops": 0,
+      "question": "Which tickets are urgent priority? Return their Linear keys.",
+      "needs_identity_join": false,
+      "note": "Single source. Linear can filter server side; so can the graph.",
+      "answer_bytes": 56,
+      "per_tool": {
+        "calls": 1,
+        "bytes": 1762,
+        "waste": 31.5,
+        "plan": [
+          "linear.issues(filter:{priority:urgent})"
+        ]
+      },
+      "graph": {
+        "calls": 1,
+        "bytes": 1762,
+        "waste": 31.5,
+        "plan": [
+          "numen.list_tasks(priority=urgent)"
+        ]
+      },
+      "calls_ratio": 1.0,
+      "bytes_ratio": 1.0
+    },
+    {
+      "qid": "T0-assigned",
+      "hops": 0,
+      "question": "Which tickets is the Linear user alice.chen assigned? Return their Linear keys.",
+      "needs_identity_join": false,
+      "note": "Asked in Linear's own vocabulary, so no identity work is required.",
+      "answer_bytes": 100,
+      "per_tool": {
+        "calls": 1,
+        "bytes": 3084,
+        "waste": 30.8,
+        "plan": [
+          "linear.issues(filter:{assignee:alice.chen})"
+        ]
+      },
+      "graph": {
+        "calls": 1,
+        "bytes": 3084,
+        "waste": 30.8,
+        "plan": [
+          "numen.get_person_tasks(alice)"
+        ]
+      },
+      "calls_ratio": 1.0,
+      "bytes_ratio": 1.0
+    },
+    {
+      "qid": "T1-pr-for-ticket",
+      "hops": 1,
+      "question": "Which pull request implements ENG-4501? Return its number.",
+      "needs_identity_join": false,
+      "note": "GitHub has no index on Linear keys, so the per-tool arm must list pull requests and scan titles and branches locally. The graph stores the edge.",
+      "answer_bytes": 5,
+      "per_tool": {
+        "calls": 2,
+        "bytes": 6558,
+        "waste": 1311.6,
+        "plan": [
+          "linear.issue(ENG-4501)",
+          "github.pulls.list(state=all)"
+        ]
+      },
+      "graph": {
+        "calls": 1,
+        "bytes": 697,
+        "waste": 139.4,
+        "plan": [
+          "numen.get_task_context(ENG-4501)"
+        ]
+      },
+      "calls_ratio": 2.0,
+      "bytes_ratio": 9.41
+    },
+    {
+      "qid": "T2-author-workload",
+      "hops": 2,
+      "question": "The pull request for ENG-4502 has an author. Which Linear tickets is that same person assigned? Return only the Linear keys.",
+      "needs_identity_join": true,
+      "note": "The PR names a GitHub login; the other tickets are keyed by a Linear user. Bridging them needs both rosters and a resolution attempt - which experiment 1 shows fails for this person.",
+      "answer_bytes": 99,
+      "per_tool": {
+        "calls": 4,
+        "bytes": 9765,
+        "waste": 98.6,
+        "plan": [
+          "github.pulls.list(state=all)",
+          "github.orgs.listMembers",
+          "linear.users",
+          "linear.issues(filter:{assignee:?})"
+        ]
+      },
+      "graph": {
+        "calls": 1,
+        "bytes": 2407,
+        "waste": 24.3,
+        "plan": [
+          "numen.get_person_workload(from pr ENG-4502)"
+        ]
+      },
+      "calls_ratio": 4.0,
+      "bytes_ratio": 4.06
+    },
+    {
+      "qid": "T2-review-queue",
+      "hops": 2,
+      "question": "Which currently open pull requests were authored by Alice Chen? Return only the pull request numbers.",
+      "needs_identity_join": true,
+      "note": "Needs the Linear-to-GitHub person link, then a per-ticket PR match.",
+      "answer_bytes": 9,
+      "per_tool": {
+        "calls": 4,
+        "bytes": 6222,
+        "waste": 691.3,
+        "plan": [
+          "linear.users",
+          "github.orgs.listMembers",
+          "linear.issues(filter:{assignee:alice.chen})",
+          "github.pulls.list(state=open)"
+        ]
+      },
+      "graph": {
+        "calls": 1,
+        "bytes": 4606,
+        "waste": 511.8,
+        "plan": [
+          "numen.get_person_prs(alice, state=open)"
+        ]
+      },
+      "calls_ratio": 4.0,
+      "bytes_ratio": 1.35
+    },
+    {
+      "qid": "T3-goal-exposure",
+      "hops": 3,
+      "question": "Which company initiative is exposed if ENG-4501 slips? Return the initiative id.",
+      "needs_identity_join": false,
+      "note": "ticket -> project -> initiative -> owner. Linear can nest within itself, but there is no single query that walks issue to initiative, so the arm pages projects and initiatives and joins locally.",
+      "answer_bytes": 32,
+      "per_tool": {
+        "calls": 3,
+        "bytes": 7567,
+        "waste": 236.5,
+        "plan": [
+          "linear.issue(ENG-4501)",
+          "linear.projects",
+          "linear.initiatives"
+        ]
+      },
+      "graph": {
+        "calls": 1,
+        "bytes": 1083,
+        "waste": 33.8,
+        "plan": [
+          "numen.get_goal_progress(via ENG-4501)"
+        ]
+      },
+      "calls_ratio": 3.0,
+      "bytes_ratio": 6.99
+    },
+    {
+      "qid": "T3-at-risk-owners",
+      "hops": 3,
+      "question": "Across every urgent in-flight ticket, which company initiatives are exposed? Return only the initiative ids.",
+      "needs_identity_join": true,
+      "note": "The widest question in the set: tickets, projects, initiatives, PRs and reviewers.",
+      "answer_bytes": 156,
+      "per_tool": {
+        "calls": 6,
+        "bytes": 16378,
+        "waste": 105.0,
+        "plan": [
+          "linear.issues(filter:{priority:urgent})",
+          "linear.projects",
+          "linear.initiatives",
+          "github.pulls.list(state=all)",
+          "github.orgs.listMembers",
+          "linear.users"
+        ]
+      },
+      "graph": {
+        "calls": 1,
+        "bytes": 3778,
+        "waste": 24.2,
+        "plan": [
+          "numen.get_delayed_projects()"
+        ]
+      },
+      "calls_ratio": 6.0,
+      "bytes_ratio": 4.34
+    }
+  ]
+}

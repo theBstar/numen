@@ -1,0 +1,841 @@
+{
+  "experiment": "cross-source identity derivability",
+  "method": "Four linking strategies (exact email, exact display name, normalized handle equality, handle-as-name-form), plus transitive closure over everything they find. Applied only to attributes the source APIs return on fetched objects. The baseline is given every strategy at once, which is more than a real agent would reliably apply.",
+  "modes": {
+    "aggressive": "every strategy, including fuzzy handle-to-name matching",
+    "conservative": "high-confidence strategies only; declines to guess"
+  },
+  "scenarios": {
+    "as_authored": {
+      "aggressive": {
+        "links_true": 39,
+        "links_predicted": 25,
+        "true_positives": 23,
+        "false_positives": 2,
+        "false_negatives": 16,
+        "recall": 0.5897,
+        "precision": 0.92,
+        "people_fully_resolved": 5,
+        "people": 13,
+        "false_merges": [
+          {
+            "cluster": [
+              "github:achen",
+              "github:achen-2",
+              "linear:alice.chen",
+              "linear:andrew.chen"
+            ],
+            "people": [
+              "alice",
+              "andrew"
+            ]
+          }
+        ],
+        "underivable_links": [
+          "github:achen  <->  slack:U03ALICE01",
+          "github:achen-2  <->  slack:U03ANDREW",
+          "github:bmartinez  <->  linear:bob.okonkwo",
+          "github:bmartinez  <->  slack:U03BOB001",
+          "github:dk-eng  <->  linear:david.kim",
+          "github:dk-eng  <->  slack:U03DAVID1",
+          "github:evilgenius42  <->  linear:eve.patel",
+          "github:evilgenius42  <->  slack:U03EVE001",
+          "github:ipopov-dev  <->  linear:igor.popov",
+          "github:ipopov-dev  <->  slack:U03IGOR01",
+          "github:jsantos  <->  slack:U03JULIA1",
+          "github:lisa-park  <->  slack:U03LISA01",
+          "linear:alice.chen  <->  slack:U03ALICE01",
+          "linear:andrew.chen  <->  slack:U03ANDREW",
+          "linear:julia.santos  <->  slack:U03JULIA1",
+          "linear:lisa.park  <->  slack:U03LISA01"
+        ],
+        "per_person": [
+          {
+            "person": "alice",
+            "name": "Alice Chen",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "handle unrelated to display name; GitHub hides the email"
+          },
+          {
+            "person": "andrew",
+            "name": "Andrew Chen",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "near-collision with alice: same surname, adjacent GitHub handle"
+          },
+          {
+            "person": "bob",
+            "name": "Bob Okonkwo",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "changed surname; Slack and Linear updated, GitHub handle frozen at the old one"
+          },
+          {
+            "person": "carol",
+            "name": "Carol Wu",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "consistent across every system, email exposed everywhere"
+          },
+          {
+            "person": "david",
+            "name": "David Kim",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "opaque handle carrying no name signal"
+          },
+          {
+            "person": "eve",
+            "name": "Eve Patel",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "personal GitHub account, no name signal, email hidden - common for contractors"
+          },
+          {
+            "person": "frank",
+            "name": "Frank Liu",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "operates a deploy bot that authors commits on his behalf"
+          },
+          {
+            "person": "grace",
+            "name": "Grace Zhang",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "consistent across every system, email exposed everywhere"
+          },
+          {
+            "person": "hannah",
+            "name": "Hannah Lee",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "handles agree once punctuation is stripped; no email anywhere"
+          },
+          {
+            "person": "igor",
+            "name": "Igor Popov",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "two GitHub accounts; the personal one authors most of the work"
+          },
+          {
+            "person": "kevin",
+            "name": "Kevin Nguyen",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "display name identical in all three systems; no emails"
+          },
+          {
+            "person": "lisa",
+            "name": "Lisa Park",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "Slack profile shows a handle rather than a name, orphaning that account"
+          },
+          {
+            "person": "julia",
+            "name": "Julia Santos",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "Slack shows a nickname rather than the legal name"
+          }
+        ]
+      },
+      "conservative": {
+        "links_true": 39,
+        "links_predicted": 22,
+        "true_positives": 22,
+        "false_positives": 0,
+        "false_negatives": 17,
+        "recall": 0.5641,
+        "precision": 1.0,
+        "people_fully_resolved": 5,
+        "people": 13,
+        "false_merges": [],
+        "underivable_links": [
+          "github:achen  <->  linear:alice.chen",
+          "github:achen  <->  slack:U03ALICE01",
+          "github:achen-2  <->  slack:U03ANDREW",
+          "github:bmartinez  <->  linear:bob.okonkwo",
+          "github:bmartinez  <->  slack:U03BOB001",
+          "github:dk-eng  <->  linear:david.kim",
+          "github:dk-eng  <->  slack:U03DAVID1",
+          "github:evilgenius42  <->  linear:eve.patel",
+          "github:evilgenius42  <->  slack:U03EVE001",
+          "github:ipopov-dev  <->  linear:igor.popov",
+          "github:ipopov-dev  <->  slack:U03IGOR01",
+          "github:jsantos  <->  slack:U03JULIA1",
+          "github:lisa-park  <->  slack:U03LISA01",
+          "linear:alice.chen  <->  slack:U03ALICE01",
+          "linear:andrew.chen  <->  slack:U03ANDREW",
+          "linear:julia.santos  <->  slack:U03JULIA1",
+          "linear:lisa.park  <->  slack:U03LISA01"
+        ],
+        "per_person": [
+          {
+            "person": "alice",
+            "name": "Alice Chen",
+            "links_true": 3,
+            "links_recovered": 0,
+            "complete": false,
+            "note": "handle unrelated to display name; GitHub hides the email"
+          },
+          {
+            "person": "andrew",
+            "name": "Andrew Chen",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "near-collision with alice: same surname, adjacent GitHub handle"
+          },
+          {
+            "person": "bob",
+            "name": "Bob Okonkwo",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "changed surname; Slack and Linear updated, GitHub handle frozen at the old one"
+          },
+          {
+            "person": "carol",
+            "name": "Carol Wu",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "consistent across every system, email exposed everywhere"
+          },
+          {
+            "person": "david",
+            "name": "David Kim",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "opaque handle carrying no name signal"
+          },
+          {
+            "person": "eve",
+            "name": "Eve Patel",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "personal GitHub account, no name signal, email hidden - common for contractors"
+          },
+          {
+            "person": "frank",
+            "name": "Frank Liu",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "operates a deploy bot that authors commits on his behalf"
+          },
+          {
+            "person": "grace",
+            "name": "Grace Zhang",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "consistent across every system, email exposed everywhere"
+          },
+          {
+            "person": "hannah",
+            "name": "Hannah Lee",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "handles agree once punctuation is stripped; no email anywhere"
+          },
+          {
+            "person": "igor",
+            "name": "Igor Popov",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "two GitHub accounts; the personal one authors most of the work"
+          },
+          {
+            "person": "kevin",
+            "name": "Kevin Nguyen",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "display name identical in all three systems; no emails"
+          },
+          {
+            "person": "lisa",
+            "name": "Lisa Park",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "Slack profile shows a handle rather than a name, orphaning that account"
+          },
+          {
+            "person": "julia",
+            "name": "Julia Santos",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "Slack shows a nickname rather than the legal name"
+          }
+        ]
+      }
+    },
+    "email_everywhere": {
+      "aggressive": {
+        "links_true": 39,
+        "links_predicted": 45,
+        "true_positives": 39,
+        "false_positives": 6,
+        "false_negatives": 0,
+        "recall": 1.0,
+        "precision": 0.8667,
+        "people_fully_resolved": 13,
+        "people": 13,
+        "false_merges": [
+          {
+            "cluster": [
+              "github:achen",
+              "github:achen-2",
+              "linear:alice.chen",
+              "linear:andrew.chen",
+              "slack:U03ALICE01",
+              "slack:U03ANDREW"
+            ],
+            "people": [
+              "alice",
+              "andrew"
+            ]
+          }
+        ],
+        "underivable_links": [],
+        "per_person": [
+          {
+            "person": "alice",
+            "name": "Alice Chen",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "handle unrelated to display name; GitHub hides the email"
+          },
+          {
+            "person": "andrew",
+            "name": "Andrew Chen",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "near-collision with alice: same surname, adjacent GitHub handle"
+          },
+          {
+            "person": "bob",
+            "name": "Bob Okonkwo",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "changed surname; Slack and Linear updated, GitHub handle frozen at the old one"
+          },
+          {
+            "person": "carol",
+            "name": "Carol Wu",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "consistent across every system, email exposed everywhere"
+          },
+          {
+            "person": "david",
+            "name": "David Kim",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "opaque handle carrying no name signal"
+          },
+          {
+            "person": "eve",
+            "name": "Eve Patel",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "personal GitHub account, no name signal, email hidden - common for contractors"
+          },
+          {
+            "person": "frank",
+            "name": "Frank Liu",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "operates a deploy bot that authors commits on his behalf"
+          },
+          {
+            "person": "grace",
+            "name": "Grace Zhang",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "consistent across every system, email exposed everywhere"
+          },
+          {
+            "person": "hannah",
+            "name": "Hannah Lee",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "handles agree once punctuation is stripped; no email anywhere"
+          },
+          {
+            "person": "igor",
+            "name": "Igor Popov",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "two GitHub accounts; the personal one authors most of the work"
+          },
+          {
+            "person": "kevin",
+            "name": "Kevin Nguyen",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "display name identical in all three systems; no emails"
+          },
+          {
+            "person": "lisa",
+            "name": "Lisa Park",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "Slack profile shows a handle rather than a name, orphaning that account"
+          },
+          {
+            "person": "julia",
+            "name": "Julia Santos",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "Slack shows a nickname rather than the legal name"
+          }
+        ]
+      },
+      "conservative": {
+        "links_true": 39,
+        "links_predicted": 39,
+        "true_positives": 39,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "recall": 1.0,
+        "precision": 1.0,
+        "people_fully_resolved": 13,
+        "people": 13,
+        "false_merges": [],
+        "underivable_links": [],
+        "per_person": [
+          {
+            "person": "alice",
+            "name": "Alice Chen",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "handle unrelated to display name; GitHub hides the email"
+          },
+          {
+            "person": "andrew",
+            "name": "Andrew Chen",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "near-collision with alice: same surname, adjacent GitHub handle"
+          },
+          {
+            "person": "bob",
+            "name": "Bob Okonkwo",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "changed surname; Slack and Linear updated, GitHub handle frozen at the old one"
+          },
+          {
+            "person": "carol",
+            "name": "Carol Wu",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "consistent across every system, email exposed everywhere"
+          },
+          {
+            "person": "david",
+            "name": "David Kim",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "opaque handle carrying no name signal"
+          },
+          {
+            "person": "eve",
+            "name": "Eve Patel",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "personal GitHub account, no name signal, email hidden - common for contractors"
+          },
+          {
+            "person": "frank",
+            "name": "Frank Liu",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "operates a deploy bot that authors commits on his behalf"
+          },
+          {
+            "person": "grace",
+            "name": "Grace Zhang",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "consistent across every system, email exposed everywhere"
+          },
+          {
+            "person": "hannah",
+            "name": "Hannah Lee",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "handles agree once punctuation is stripped; no email anywhere"
+          },
+          {
+            "person": "igor",
+            "name": "Igor Popov",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "two GitHub accounts; the personal one authors most of the work"
+          },
+          {
+            "person": "kevin",
+            "name": "Kevin Nguyen",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "display name identical in all three systems; no emails"
+          },
+          {
+            "person": "lisa",
+            "name": "Lisa Park",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "Slack profile shows a handle rather than a name, orphaning that account"
+          },
+          {
+            "person": "julia",
+            "name": "Julia Santos",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "Slack shows a nickname rather than the legal name"
+          }
+        ]
+      }
+    },
+    "no_emails": {
+      "aggressive": {
+        "links_true": 39,
+        "links_predicted": 25,
+        "true_positives": 23,
+        "false_positives": 2,
+        "false_negatives": 16,
+        "recall": 0.5897,
+        "precision": 0.92,
+        "people_fully_resolved": 5,
+        "people": 13,
+        "false_merges": [
+          {
+            "cluster": [
+              "github:achen",
+              "github:achen-2",
+              "linear:alice.chen",
+              "linear:andrew.chen"
+            ],
+            "people": [
+              "alice",
+              "andrew"
+            ]
+          }
+        ],
+        "underivable_links": [
+          "github:achen  <->  slack:U03ALICE01",
+          "github:achen-2  <->  slack:U03ANDREW",
+          "github:bmartinez  <->  linear:bob.okonkwo",
+          "github:bmartinez  <->  slack:U03BOB001",
+          "github:dk-eng  <->  linear:david.kim",
+          "github:dk-eng  <->  slack:U03DAVID1",
+          "github:evilgenius42  <->  linear:eve.patel",
+          "github:evilgenius42  <->  slack:U03EVE001",
+          "github:ipopov-dev  <->  linear:igor.popov",
+          "github:ipopov-dev  <->  slack:U03IGOR01",
+          "github:jsantos  <->  slack:U03JULIA1",
+          "github:lisa-park  <->  slack:U03LISA01",
+          "linear:alice.chen  <->  slack:U03ALICE01",
+          "linear:andrew.chen  <->  slack:U03ANDREW",
+          "linear:julia.santos  <->  slack:U03JULIA1",
+          "linear:lisa.park  <->  slack:U03LISA01"
+        ],
+        "per_person": [
+          {
+            "person": "alice",
+            "name": "Alice Chen",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "handle unrelated to display name; GitHub hides the email"
+          },
+          {
+            "person": "andrew",
+            "name": "Andrew Chen",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "near-collision with alice: same surname, adjacent GitHub handle"
+          },
+          {
+            "person": "bob",
+            "name": "Bob Okonkwo",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "changed surname; Slack and Linear updated, GitHub handle frozen at the old one"
+          },
+          {
+            "person": "carol",
+            "name": "Carol Wu",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "consistent across every system, email exposed everywhere"
+          },
+          {
+            "person": "david",
+            "name": "David Kim",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "opaque handle carrying no name signal"
+          },
+          {
+            "person": "eve",
+            "name": "Eve Patel",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "personal GitHub account, no name signal, email hidden - common for contractors"
+          },
+          {
+            "person": "frank",
+            "name": "Frank Liu",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "operates a deploy bot that authors commits on his behalf"
+          },
+          {
+            "person": "grace",
+            "name": "Grace Zhang",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "consistent across every system, email exposed everywhere"
+          },
+          {
+            "person": "hannah",
+            "name": "Hannah Lee",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "handles agree once punctuation is stripped; no email anywhere"
+          },
+          {
+            "person": "igor",
+            "name": "Igor Popov",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "two GitHub accounts; the personal one authors most of the work"
+          },
+          {
+            "person": "kevin",
+            "name": "Kevin Nguyen",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "display name identical in all three systems; no emails"
+          },
+          {
+            "person": "lisa",
+            "name": "Lisa Park",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "Slack profile shows a handle rather than a name, orphaning that account"
+          },
+          {
+            "person": "julia",
+            "name": "Julia Santos",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "Slack shows a nickname rather than the legal name"
+          }
+        ]
+      },
+      "conservative": {
+        "links_true": 39,
+        "links_predicted": 22,
+        "true_positives": 22,
+        "false_positives": 0,
+        "false_negatives": 17,
+        "recall": 0.5641,
+        "precision": 1.0,
+        "people_fully_resolved": 5,
+        "people": 13,
+        "false_merges": [],
+        "underivable_links": [
+          "github:achen  <->  linear:alice.chen",
+          "github:achen  <->  slack:U03ALICE01",
+          "github:achen-2  <->  slack:U03ANDREW",
+          "github:bmartinez  <->  linear:bob.okonkwo",
+          "github:bmartinez  <->  slack:U03BOB001",
+          "github:dk-eng  <->  linear:david.kim",
+          "github:dk-eng  <->  slack:U03DAVID1",
+          "github:evilgenius42  <->  linear:eve.patel",
+          "github:evilgenius42  <->  slack:U03EVE001",
+          "github:ipopov-dev  <->  linear:igor.popov",
+          "github:ipopov-dev  <->  slack:U03IGOR01",
+          "github:jsantos  <->  slack:U03JULIA1",
+          "github:lisa-park  <->  slack:U03LISA01",
+          "linear:alice.chen  <->  slack:U03ALICE01",
+          "linear:andrew.chen  <->  slack:U03ANDREW",
+          "linear:julia.santos  <->  slack:U03JULIA1",
+          "linear:lisa.park  <->  slack:U03LISA01"
+        ],
+        "per_person": [
+          {
+            "person": "alice",
+            "name": "Alice Chen",
+            "links_true": 3,
+            "links_recovered": 0,
+            "complete": false,
+            "note": "handle unrelated to display name; GitHub hides the email"
+          },
+          {
+            "person": "andrew",
+            "name": "Andrew Chen",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "near-collision with alice: same surname, adjacent GitHub handle"
+          },
+          {
+            "person": "bob",
+            "name": "Bob Okonkwo",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "changed surname; Slack and Linear updated, GitHub handle frozen at the old one"
+          },
+          {
+            "person": "carol",
+            "name": "Carol Wu",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "consistent across every system, email exposed everywhere"
+          },
+          {
+            "person": "david",
+            "name": "David Kim",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "opaque handle carrying no name signal"
+          },
+          {
+            "person": "eve",
+            "name": "Eve Patel",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "personal GitHub account, no name signal, email hidden - common for contractors"
+          },
+          {
+            "person": "frank",
+            "name": "Frank Liu",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "operates a deploy bot that authors commits on his behalf"
+          },
+          {
+            "person": "grace",
+            "name": "Grace Zhang",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "consistent across every system, email exposed everywhere"
+          },
+          {
+            "person": "hannah",
+            "name": "Hannah Lee",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "handles agree once punctuation is stripped; no email anywhere"
+          },
+          {
+            "person": "igor",
+            "name": "Igor Popov",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "two GitHub accounts; the personal one authors most of the work"
+          },
+          {
+            "person": "kevin",
+            "name": "Kevin Nguyen",
+            "links_true": 3,
+            "links_recovered": 3,
+            "complete": true,
+            "note": "display name identical in all three systems; no emails"
+          },
+          {
+            "person": "lisa",
+            "name": "Lisa Park",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "Slack profile shows a handle rather than a name, orphaning that account"
+          },
+          {
+            "person": "julia",
+            "name": "Julia Santos",
+            "links_true": 3,
+            "links_recovered": 1,
+            "complete": false,
+            "note": "Slack shows a nickname rather than the legal name"
+          }
+        ]
+      }
+    }
+  }
+}
