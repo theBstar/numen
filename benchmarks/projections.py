@@ -20,7 +20,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from benchmarks.identities import BY_KEY  # noqa: E402
-from src.demo.fixtures import GOALS, PROJECTS, PRS, TASKS  # noqa: E402
+from src.demo.fixtures import EDGES, GOALS, PROJECTS, PRS, TASK_IDS, TASKS  # noqa: E402
 
 
 def _linear_user(person_key: str) -> dict:
@@ -38,8 +38,50 @@ def _github_user(person_key: str) -> dict:
     return out
 
 
+_KEY_BY_ID = {v: k for k, v in TASK_IDS.items()}
+
+
+def _relations() -> dict[str, list[dict]]:
+    """Issue relations, the way Linear returns them on an issue.
+
+    Linear exposes `blocks` / `blockedBy` / `relatedTo` natively, so the
+    per-tool arm must have them too - a dependency question the baseline
+    cannot even see would prove nothing.
+    """
+    out: dict[str, list[dict]] = {t["key"]: [] for t in TASKS}
+    for e in EDGES:
+        a, b = _KEY_BY_ID.get(e["from_entity_id"]), _KEY_BY_ID.get(e["to_entity_id"])
+        if not a or not b:
+            continue
+        if e["type"] == "blocks":
+            out[a].append({"type": "blocks", "relatedIssue": {"identifier": b}})
+            out[b].append({"type": "blockedBy", "relatedIssue": {"identifier": a}})
+        elif e["type"] == "depends_on":
+            out[a].append({"type": "dependsOn", "relatedIssue": {"identifier": b}})
+    return out
+
+
+def _prd_link() -> dict[str, str]:
+    """ticket -> the PRD it implements.
+
+    Real teams link the spec from the ticket, and Linear has a field for it.
+    Without this the document arm could not reach implementation at all, and
+    the wiki comparison would measure missing data rather than access shape.
+    """
+    from benchmarks.wiki_fixtures import FEATURES
+
+    out: dict[str, str] = {}
+    for f in FEATURES:
+        primary = f["prd_references"][0]
+        for t in f["implementation"]["tasks"]:
+            out[t] = primary
+    return out
+
+
 def linear_issues() -> list[dict]:
-    """Linear GraphQL `issues` nodes, with assignee nested."""
+    """Linear GraphQL `issues` nodes, with assignee and relations nested."""
+    rel = _relations()
+    prd = _prd_link()
     return [
         {
             "identifier": t["key"],
@@ -50,6 +92,8 @@ def linear_issues() -> list[dict]:
             "dueDate": t["due_date"],
             "createdAt": t["created_at"],
             "assignee": _linear_user(t["assignee"]),
+            "relations": {"nodes": rel.get(t["key"], [])},
+            "specDocument": prd.get(t["key"]),
         }
         for t in TASKS
     ]

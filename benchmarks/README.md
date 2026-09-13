@@ -19,8 +19,9 @@ Experiment 3 calls a model and is **not** part of `make bench`:
 
 ```bash
 pip install claude-agent-sdk
-python3 -m benchmarks.run_agent_accuracy --runs 3
-python3 -m benchmarks.run_agent_accuracy --runs 3 --only T3-goal-exposure   # one question
+python3 -m benchmarks.run_agent_accuracy --runs 3    # exp 3: graph instead of integrations
+python3 -m benchmarks.run_hopladder --runs 3         # exp 4: integrations, +/- the graph
+python3 -m benchmarks.run_wikiladder --runs 3        # exp 5: documents, +/- the wiki graph
 ```
 
 It authenticates through the local Claude Code installation, so it needs no
@@ -40,6 +41,12 @@ $4.53.
 | `run_retrieval_cost.py` | Experiment 2. |
 | `arms_mcp.py` | The two tool surfaces as in-process MCP servers, for experiment 3. |
 | `run_agent_accuracy.py` | Experiment 3. Claude Agent SDK, graded by set equality. |
+| `hopladder.py` | Experiment 4 questions: one hop to four over the work graph. |
+| `run_hopladder.py` | Experiment 4. Also the shared runner for experiment 5. |
+| `wiki_fixtures.py` | Six PRDs and the feature graph over them. Authored - `src/demo/` seeds no documentation. |
+| `wiki_arms.py` | Experiment 5 surfaces: document search/fetch, and the wiki graph. |
+| `wikiladder.py` | Experiment 5 questions, including one deliberate contradiction. |
+| `run_wikiladder.py` | Experiment 5. |
 
 ## Design rules
 
@@ -60,7 +67,14 @@ support. An early version left the per-tool list endpoints argument-less, so
 the baseline dumped sixty issues per call; those numbers were thrown away.
 
 **Publish contradictions.** Experiment 3 refuted experiment 2's cost
-prediction. That is in the headline of BENCHMARK.md, not a footnote.
+prediction, experiment 4 found the context layer earning nothing at all, and
+experiment 4 also showed experiment 1's resolver understates a reading model.
+All three are in the headline of BENCHMARK.md, not a footnote.
+
+**Count harness overhead separately.** The CLI defers tool loading, so some
+tool calls are `ToolSearch` rather than a data fetch. Those are reported apart
+from data calls and excluded from the "how often was the layer used"
+denominator.
 
 ## Changing it
 

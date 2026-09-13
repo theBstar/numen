@@ -13,12 +13,21 @@ including the cases where the answer is "nothing".
 | Experiment 1 - identity derivability | **Run.** Deterministic, no model. |
 | Experiment 2 - retrieval cost | **Run.** Deterministic, no model. |
 | Experiment 3 - agent answer accuracy | **Run.** Claude Sonnet 5 via the Claude Agent SDK, 3 runs per question per arm, 42 sessions, $4.53. |
+| Experiment 4 - hop ladder, work graph | **Run.** Integrations alone against integrations plus the graph. 24 sessions, $2.26. |
+| Experiment 5 - hop ladder, product wiki | **Run.** Documents alone against documents plus the wiki graph. 30 sessions, $1.82. |
 
 Experiments 1 and 2 are reproducible with `make bench` - no network, no key,
 no Docker. Experiment 3 needs the Claude Agent SDK and spends usage.
 
-**Experiment 3 contradicts part of experiment 2.** That is the most useful
-thing in this document and it is dealt with directly below rather than buried.
+**Experiments 3, 4 and 5 each contradict something earlier in the sequence.**
+Those contradictions are the most useful thing in this document, so they are
+dealt with directly rather than buried.
+
+The single clearest result, from experiments 4 and 5 together:
+
+> A context layer earned nothing over the work graph, where Linear already
+> models dependencies natively. It earned a great deal over the product wiki,
+> where no source system records which ticket implements which spec.
 
 ## The headline, stated fairly
 
@@ -67,6 +76,13 @@ easy cases the baseline should win.
 | No emails | conservative | 56% | 100% | 5/13 | 0 |
 
 Two findings, and the second is the more important one.
+
+> **Qualified by experiment 4.** These figures measure *mechanical* matching.
+> A reading model does better: in experiment 4 the integrations arm resolved
+> Igor Popov to the GitHub login `ipopov-dev` in three runs of three, by
+> pulling the member roster and reading it - a link the four strategies below
+> score as underivable. Treat 56-59% as a floor for string matching, not a
+> ceiling for an agent.
 
 **In a messy estate the per-tool agent recovers a bit over half the links, and
 the failure is not graceful.** Being aggressive buys three points of recall
@@ -182,6 +198,94 @@ predicts showing up in prose.
 The graph is not immune: on one run of the review-queue question it returned
 an empty list where the answer was two pull requests.
 
+## Experiments 4 and 5 - the deployment people actually have
+
+Experiment 3 replaced the integrations with the graph. Nobody deploys that
+way: you do not disconnect your Linear MCP server when you add a context
+layer. So both of these give the second arm **every integration plus the
+layer on top**, and climb from one hop to four.
+
+That framing buys a measurement the graph-only arm could not make. When the
+raw tools are sitting right there, does the model reach for the layer at all?
+
+### Experiment 4 - the work graph
+
+Four rungs: what is one person working on (one source, no identity work);
+whose pull requests await a named person's review (two sources, one identity
+hop); is that person holding anyone up, counting both blocked tickets and a
+review queue (three hops, two systems unioned on a person); and which
+initiatives that blocking exposes (four hops).
+
+| | Integrations | Integrations + graph |
+|---|---|---|
+| Accuracy | **12/12 (100%)** | 11/12 (92%) |
+| Cost | $1.16 | $1.10 |
+| Data-tool calls | 45 | 44 |
+| Calls to the layer | - | 52% |
+
+**The integrations answered everything, including the four-hop question.**
+Adding the layer cost one answer and saved no round trips.
+
+**Adoption tracked depth exactly.** The model used the graph for 0% of data
+calls at one and two hops, and around 70% at three and four. It reaches for a
+context layer precisely when the question deepens, which validates the design
+intent even though the outcome did not improve.
+
+**A second server doubled tool-selection overhead**, from 16 ToolSearch calls
+to 33. That is a real cost of bolting on a layer, separate from fetching data.
+
+Why did the baseline sweep it? Because **Linear already models the
+relationship**. It exposes `blocks` and `blockedBy` natively, so the
+dependency walk the question needs is a first-class feature of the source
+system. A graph over data that is already a graph adds a hop, not a
+capability.
+
+### Experiment 5 - the product wiki
+
+The same ladder asked of product documentation: which document specifies a
+fix; who wrote it; who is implementing the feature it describes; which
+initiatives that work serves; and which two documents contradict each other
+on retry policy.
+
+| | Documents | Documents + wiki |
+|---|---|---|
+| Accuracy | 13/15 (87%) | **15/15 (100%)** |
+| Cost | $1.10 | **$0.72** |
+| Data-tool calls | 49 | **34** |
+| Calls to the layer | - | 26% |
+
+**Here the layer earned its keep.** More accurate, 35% cheaper, and a third
+fewer calls.
+
+The sharpest single result is rung three - *who is implementing the feature
+specified in PRD-004?* The document arm spent 16 data calls across six
+different tools: search the docs, fetch the document, list issues, list
+users, list projects, list initiatives, and stitch it together. The wiki arm
+called one tool, `wiki_feature_for_document`, three times. $0.136 against
+$0.039.
+
+Rung four is the failure that matters. Asked which initiatives the work in
+PRD-002 serves, the document arm answered `goal-bob-connectors` and
+`goal-integrations` in two runs of three - confidently wrong, following the
+word "connector" in the prose rather than the tickets that implement it. The
+wiki arm got it three times out of three.
+
+Rung five is an honest negative: both arms found the contradicting retry
+policies three times out of three, and the wiki arm used the layer 0% of the
+time to do it. The structural hint that two documents describe one feature
+was not needed; search found both.
+
+### What separates the two results
+
+Documents record no relationships. No source system knows which ticket
+implements which specification, who owns a described capability, or which
+goal a written feature serves. A wiki graph is the only place that
+information exists, so querying it is not a shortcut - it is the only route.
+
+Linear, by contrast, already knows what blocks what. The value of a context
+layer is concentrated exactly where the source systems have no native
+representation of the relationship you need.
+
 ## Where the two experiments meet
 
 Hop count alone does not predict difficulty. What predicts it is whether a hop
@@ -201,8 +305,12 @@ above are a floor for the per-tool arm, not an estimate.
 - **Nothing about setup cost.** Per-tool MCPs are zero infrastructure. Numen is
   Postgres, Redis, FalkorDB and sync workers. For a small clean estate asking
   single-source questions, that trade is bad.
-- **One synthetic estate.** Thirteen people, sixty tickets, twenty pull
-  requests, one shape of messiness. Your estate may be cleaner or worse.
+- **One synthetic estate, and a small one.** Thirteen people, sixty tickets,
+  twenty pull requests. That fits comfortably in a context window, which is
+  very likely why the integrations arm swept experiment 4 - it could simply
+  fetch everything and reason over it. A context layer should earn its keep
+  when the estate does *not* fit, and this one does. Nothing here tests that,
+  and it is the single biggest limitation of the whole benchmark.
 
 ## Reproducing and arguing with it
 

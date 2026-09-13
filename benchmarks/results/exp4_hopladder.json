@@ -1,0 +1,913 @@
+{
+  "model": "claude-sonnet-5",
+  "runs": 3,
+  "rows": [
+    {
+      "qid": "H1-what-are-they-working-on",
+      "hops": 1,
+      "arm": "integrations",
+      "crosses_identity": false,
+      "runs": 3,
+      "errors": 0,
+      "correct": 3,
+      "accuracy": 1.0,
+      "distinct_answers": 1,
+      "named_distractor_runs": 0,
+      "mean_tool_calls": 3,
+      "mean_graph_share": 0.0,
+      "mean_cost_usd": 0.0515,
+      "total_cost_usd": 0.1545,
+      "tool_histogram": {
+        "ToolSearch": 3,
+        "mcp__pertool__linear_list_users": 3,
+        "mcp__pertool__linear_list_issues": 3
+      },
+      "detail": [
+        {
+          "parsed": true,
+          "got": [
+            "ENG-4508",
+            "ENG-4514",
+            "ENG-4521",
+            "ENG-4525",
+            "ENG-4536",
+            "ENG-4547",
+            "ENG-4553"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 3,
+          "tools": [
+            "ToolSearch",
+            "mcp__pertool__linear_list_users",
+            "mcp__pertool__linear_list_issues"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "pertool": 2
+          },
+          "graph_share": 0.0,
+          "billable_input": 90325,
+          "cost_usd": 0.061646000000000006,
+          "duration_ms": 13763
+        },
+        {
+          "parsed": true,
+          "got": [
+            "ENG-4508",
+            "ENG-4514",
+            "ENG-4521",
+            "ENG-4525",
+            "ENG-4536",
+            "ENG-4547",
+            "ENG-4553"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 3,
+          "tools": [
+            "ToolSearch",
+            "mcp__pertool__linear_list_users",
+            "mcp__pertool__linear_list_issues"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "pertool": 2
+          },
+          "graph_share": 0.0,
+          "billable_input": 90072,
+          "cost_usd": 0.0470632,
+          "duration_ms": 12203
+        },
+        {
+          "parsed": true,
+          "got": [
+            "ENG-4508",
+            "ENG-4514",
+            "ENG-4521",
+            "ENG-4525",
+            "ENG-4536",
+            "ENG-4547",
+            "ENG-4553"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 3,
+          "tools": [
+            "ToolSearch",
+            "mcp__pertool__linear_list_users",
+            "mcp__pertool__linear_list_issues"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "pertool": 2
+          },
+          "graph_share": 0.0,
+          "billable_input": 90292,
+          "cost_usd": 0.0458188,
+          "duration_ms": 13600
+        }
+      ]
+    },
+    {
+      "qid": "H1-what-are-they-working-on",
+      "hops": 1,
+      "arm": "integrations_plus_graph",
+      "crosses_identity": false,
+      "runs": 3,
+      "errors": 0,
+      "correct": 3,
+      "accuracy": 1.0,
+      "distinct_answers": 1,
+      "named_distractor_runs": 0,
+      "mean_tool_calls": 4.33,
+      "mean_graph_share": 0.0,
+      "mean_cost_usd": 0.064,
+      "total_cost_usd": 0.192,
+      "tool_histogram": {
+        "ToolSearch": 7,
+        "mcp__pertool__linear_list_users": 3,
+        "mcp__pertool__linear_list_issues": 3
+      },
+      "detail": [
+        {
+          "parsed": true,
+          "got": [
+            "ENG-4508",
+            "ENG-4514",
+            "ENG-4521",
+            "ENG-4525",
+            "ENG-4536",
+            "ENG-4547",
+            "ENG-4553"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 4,
+          "tools": [
+            "ToolSearch",
+            "ToolSearch",
+            "mcp__pertool__linear_list_users",
+            "mcp__pertool__linear_list_issues"
+          ],
+          "calls_by_server": {
+            "other": 2,
+            "pertool": 2
+          },
+          "graph_share": 0.0,
+          "billable_input": 118318,
+          "cost_usd": 0.0745738,
+          "duration_ms": 16488
+        },
+        {
+          "parsed": true,
+          "got": [
+            "ENG-4508",
+            "ENG-4514",
+            "ENG-4521",
+            "ENG-4525",
+            "ENG-4536",
+            "ENG-4547",
+            "ENG-4553"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 4,
+          "tools": [
+            "ToolSearch",
+            "ToolSearch",
+            "mcp__pertool__linear_list_users",
+            "mcp__pertool__linear_list_issues"
+          ],
+          "calls_by_server": {
+            "other": 2,
+            "pertool": 2
+          },
+          "graph_share": 0.0,
+          "billable_input": 118082,
+          "cost_usd": 0.05881580000000001,
+          "duration_ms": 13289
+        },
+        {
+          "parsed": true,
+          "got": [
+            "ENG-4508",
+            "ENG-4514",
+            "ENG-4521",
+            "ENG-4525",
+            "ENG-4536",
+            "ENG-4547",
+            "ENG-4553"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 5,
+          "tools": [
+            "ToolSearch",
+            "ToolSearch",
+            "ToolSearch",
+            "mcp__pertool__linear_list_users",
+            "mcp__pertool__linear_list_issues"
+          ],
+          "calls_by_server": {
+            "other": 3,
+            "pertool": 2
+          },
+          "graph_share": 0.0,
+          "billable_input": 137213,
+          "cost_usd": 0.058561400000000007,
+          "duration_ms": 13943
+        }
+      ]
+    },
+    {
+      "qid": "H2-waiting-on-my-review",
+      "hops": 2,
+      "arm": "integrations",
+      "crosses_identity": true,
+      "runs": 3,
+      "errors": 0,
+      "correct": 3,
+      "accuracy": 1.0,
+      "distinct_answers": 1,
+      "named_distractor_runs": 0,
+      "mean_tool_calls": 2.67,
+      "mean_graph_share": 0.0,
+      "mean_cost_usd": 0.0448,
+      "total_cost_usd": 0.1345,
+      "tool_histogram": {
+        "ToolSearch": 3,
+        "mcp__pertool__github_list_pulls": 3,
+        "mcp__pertool__github_list_members": 2
+      },
+      "detail": [
+        {
+          "parsed": true,
+          "got": [
+            "achen",
+            "knguyen"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 2,
+          "tools": [
+            "ToolSearch",
+            "mcp__pertool__github_list_pulls"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "pertool": 1
+          },
+          "graph_share": 0.0,
+          "billable_input": 65947,
+          "cost_usd": 0.0512342,
+          "duration_ms": 12163
+        },
+        {
+          "parsed": true,
+          "got": [
+            "achen",
+            "knguyen"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 3,
+          "tools": [
+            "ToolSearch",
+            "mcp__pertool__github_list_pulls",
+            "mcp__pertool__github_list_members"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "pertool": 2
+          },
+          "graph_share": 0.0,
+          "billable_input": 90238,
+          "cost_usd": 0.0435026,
+          "duration_ms": 12491
+        },
+        {
+          "parsed": true,
+          "got": [
+            "achen",
+            "knguyen"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 3,
+          "tools": [
+            "ToolSearch",
+            "mcp__pertool__github_list_pulls",
+            "mcp__pertool__github_list_members"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "pertool": 2
+          },
+          "graph_share": 0.0,
+          "billable_input": 65712,
+          "cost_usd": 0.0397458,
+          "duration_ms": 12153
+        }
+      ]
+    },
+    {
+      "qid": "H2-waiting-on-my-review",
+      "hops": 2,
+      "arm": "integrations_plus_graph",
+      "crosses_identity": true,
+      "runs": 3,
+      "errors": 0,
+      "correct": 3,
+      "accuracy": 1.0,
+      "distinct_answers": 1,
+      "named_distractor_runs": 0,
+      "mean_tool_calls": 3,
+      "mean_graph_share": 0.0,
+      "mean_cost_usd": 0.0486,
+      "total_cost_usd": 0.1458,
+      "tool_histogram": {
+        "ToolSearch": 4,
+        "mcp__pertool__github_list_pulls": 3,
+        "mcp__pertool__github_list_members": 2
+      },
+      "detail": [
+        {
+          "parsed": true,
+          "got": [
+            "achen",
+            "knguyen"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 3,
+          "tools": [
+            "ToolSearch",
+            "mcp__pertool__github_list_pulls",
+            "mcp__pertool__github_list_members"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "pertool": 2
+          },
+          "graph_share": 0.0,
+          "billable_input": 90626,
+          "cost_usd": 0.059189200000000004,
+          "duration_ms": 16508
+        },
+        {
+          "parsed": true,
+          "got": [
+            "achen",
+            "knguyen"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 4,
+          "tools": [
+            "ToolSearch",
+            "ToolSearch",
+            "mcp__pertool__github_list_members",
+            "mcp__pertool__github_list_pulls"
+          ],
+          "calls_by_server": {
+            "other": 2,
+            "pertool": 2
+          },
+          "graph_share": 0.0,
+          "billable_input": 92686,
+          "cost_usd": 0.050399000000000006,
+          "duration_ms": 11492
+        },
+        {
+          "parsed": true,
+          "got": [
+            "achen",
+            "knguyen"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 2,
+          "tools": [
+            "ToolSearch",
+            "mcp__pertool__github_list_pulls"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "pertool": 1
+          },
+          "graph_share": 0.0,
+          "billable_input": 66235,
+          "cost_usd": 0.036186,
+          "duration_ms": 16562
+        }
+      ]
+    },
+    {
+      "qid": "H3-am-i-blocking-anyone",
+      "hops": 3,
+      "arm": "integrations",
+      "crosses_identity": true,
+      "runs": 3,
+      "errors": 0,
+      "correct": 3,
+      "accuracy": 1.0,
+      "distinct_answers": 1,
+      "named_distractor_runs": 0,
+      "mean_tool_calls": 8,
+      "mean_graph_share": 0.0,
+      "mean_cost_usd": 0.1254,
+      "total_cost_usd": 0.3761,
+      "tool_histogram": {
+        "ToolSearch": 5,
+        "mcp__pertool__linear_list_users": 3,
+        "mcp__pertool__linear_list_issues": 9,
+        "mcp__pertool__github_list_members": 3,
+        "mcp__pertool__github_list_pulls": 4
+      },
+      "detail": [
+        {
+          "parsed": true,
+          "got": [
+            "alice.chen",
+            "kevin.nguyen"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 7,
+          "tools": [
+            "ToolSearch",
+            "mcp__pertool__linear_list_users",
+            "ToolSearch",
+            "mcp__pertool__linear_list_issues",
+            "mcp__pertool__github_list_members",
+            "mcp__pertool__linear_list_issues",
+            "mcp__pertool__github_list_pulls"
+          ],
+          "calls_by_server": {
+            "other": 2,
+            "pertool": 5
+          },
+          "graph_share": 0.0,
+          "billable_input": 130603,
+          "cost_usd": 0.1297328,
+          "duration_ms": 35424
+        },
+        {
+          "parsed": true,
+          "got": [
+            "alice.chen",
+            "kevin.nguyen"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 8,
+          "tools": [
+            "ToolSearch",
+            "mcp__pertool__linear_list_users",
+            "mcp__pertool__github_list_members",
+            "mcp__pertool__linear_list_issues",
+            "mcp__pertool__github_list_pulls",
+            "mcp__pertool__linear_list_issues",
+            "mcp__pertool__github_list_pulls",
+            "mcp__pertool__linear_list_issues"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "pertool": 7
+          },
+          "graph_share": 0.0,
+          "billable_input": 157038,
+          "cost_usd": 0.13216440000000002,
+          "duration_ms": 35600
+        },
+        {
+          "parsed": true,
+          "got": [
+            "alice.chen",
+            "kevin.nguyen"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 9,
+          "tools": [
+            "ToolSearch",
+            "mcp__pertool__linear_list_users",
+            "ToolSearch",
+            "mcp__pertool__linear_list_issues",
+            "mcp__pertool__github_list_members",
+            "mcp__pertool__github_list_pulls",
+            "mcp__pertool__linear_list_issues",
+            "mcp__pertool__linear_list_issues",
+            "mcp__pertool__linear_list_issues"
+          ],
+          "calls_by_server": {
+            "other": 2,
+            "pertool": 7
+          },
+          "graph_share": 0.0,
+          "billable_input": 153953,
+          "cost_usd": 0.1141642,
+          "duration_ms": 40966
+        }
+      ]
+    },
+    {
+      "qid": "H3-am-i-blocking-anyone",
+      "hops": 3,
+      "arm": "integrations_plus_graph",
+      "crosses_identity": true,
+      "runs": 3,
+      "errors": 0,
+      "correct": 3,
+      "accuracy": 1.0,
+      "distinct_answers": 1,
+      "named_distractor_runs": 0,
+      "mean_tool_calls": 10.67,
+      "mean_graph_share": 0.378,
+      "mean_cost_usd": 0.1302,
+      "total_cost_usd": 0.3907,
+      "tool_histogram": {
+        "ToolSearch": 15,
+        "mcp__pertool__linear_list_users": 3,
+        "mcp__numen__numen_get_person_workload": 2,
+        "mcp__numen__numen_get_person_prs": 3,
+        "mcp__numen__numen_get_blocking_chain": 6,
+        "mcp__pertool__linear_list_issues": 1,
+        "mcp__pertool__github_list_pulls": 1,
+        "mcp__numen__numen_get_task_context": 1
+      },
+      "detail": [
+        {
+          "parsed": true,
+          "got": [
+            "alice.chen",
+            "kevin.nguyen"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 10,
+          "tools": [
+            "ToolSearch",
+            "ToolSearch",
+            "ToolSearch",
+            "ToolSearch",
+            "ToolSearch",
+            "mcp__pertool__linear_list_users",
+            "mcp__numen__numen_get_person_workload",
+            "mcp__numen__numen_get_person_prs",
+            "mcp__numen__numen_get_blocking_chain",
+            "mcp__numen__numen_get_blocking_chain"
+          ],
+          "calls_by_server": {
+            "other": 5,
+            "pertool": 1,
+            "numen": 4
+          },
+          "graph_share": 0.4,
+          "billable_input": 167447,
+          "cost_usd": 0.14583600000000002,
+          "duration_ms": 27433
+        },
+        {
+          "parsed": true,
+          "got": [
+            "alice.chen",
+            "kevin.nguyen"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 10,
+          "tools": [
+            "ToolSearch",
+            "ToolSearch",
+            "ToolSearch",
+            "ToolSearch",
+            "ToolSearch",
+            "mcp__pertool__linear_list_users",
+            "mcp__numen__numen_get_person_workload",
+            "mcp__numen__numen_get_person_prs",
+            "mcp__numen__numen_get_blocking_chain",
+            "mcp__numen__numen_get_blocking_chain"
+          ],
+          "calls_by_server": {
+            "other": 5,
+            "pertool": 1,
+            "numen": 4
+          },
+          "graph_share": 0.4,
+          "billable_input": 167370,
+          "cost_usd": 0.1448024,
+          "duration_ms": 27134
+        },
+        {
+          "parsed": true,
+          "got": [
+            "alice.chen",
+            "kevin.nguyen"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 12,
+          "tools": [
+            "ToolSearch",
+            "ToolSearch",
+            "ToolSearch",
+            "ToolSearch",
+            "ToolSearch",
+            "mcp__pertool__linear_list_users",
+            "mcp__numen__numen_get_person_prs",
+            "mcp__pertool__linear_list_issues",
+            "mcp__numen__numen_get_blocking_chain",
+            "mcp__numen__numen_get_blocking_chain",
+            "mcp__pertool__github_list_pulls",
+            "mcp__numen__numen_get_task_context"
+          ],
+          "calls_by_server": {
+            "other": 5,
+            "pertool": 3,
+            "numen": 4
+          },
+          "graph_share": 0.333,
+          "billable_input": 203224,
+          "cost_usd": 0.1000472,
+          "duration_ms": 27416
+        }
+      ]
+    },
+    {
+      "qid": "H4-initiatives-at-risk",
+      "hops": 4,
+      "arm": "integrations",
+      "crosses_identity": false,
+      "runs": 3,
+      "errors": 0,
+      "correct": 3,
+      "accuracy": 1.0,
+      "distinct_answers": 1,
+      "named_distractor_runs": 0,
+      "mean_tool_calls": 6.67,
+      "mean_graph_share": 0.0,
+      "mean_cost_usd": 0.1649,
+      "total_cost_usd": 0.4947,
+      "tool_histogram": {
+        "ToolSearch": 5,
+        "mcp__pertool__linear_list_users": 3,
+        "mcp__pertool__linear_list_initiatives": 3,
+        "mcp__pertool__linear_list_projects": 3,
+        "mcp__pertool__linear_list_issues": 6
+      },
+      "detail": [
+        {
+          "parsed": true,
+          "got": [
+            "goal-igor-infra",
+            "goal-infra-cost",
+            "goal-latency"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 6,
+          "tools": [
+            "ToolSearch",
+            "mcp__pertool__linear_list_users",
+            "mcp__pertool__linear_list_initiatives",
+            "mcp__pertool__linear_list_projects",
+            "mcp__pertool__linear_list_issues",
+            "mcp__pertool__linear_list_issues"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "pertool": 5
+          },
+          "graph_share": 0.0,
+          "billable_input": 139644,
+          "cost_usd": 0.1616448,
+          "duration_ms": 41972
+        },
+        {
+          "parsed": true,
+          "got": [
+            "goal-igor-infra",
+            "goal-infra-cost",
+            "goal-latency"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 7,
+          "tools": [
+            "ToolSearch",
+            "ToolSearch",
+            "mcp__pertool__linear_list_users",
+            "mcp__pertool__linear_list_projects",
+            "mcp__pertool__linear_list_initiatives",
+            "mcp__pertool__linear_list_issues",
+            "mcp__pertool__linear_list_issues"
+          ],
+          "calls_by_server": {
+            "other": 2,
+            "pertool": 5
+          },
+          "graph_share": 0.0,
+          "billable_input": 179444,
+          "cost_usd": 0.170694,
+          "duration_ms": 52180
+        },
+        {
+          "parsed": true,
+          "got": [
+            "goal-igor-infra",
+            "goal-infra-cost",
+            "goal-latency"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 7,
+          "tools": [
+            "ToolSearch",
+            "ToolSearch",
+            "mcp__pertool__linear_list_users",
+            "mcp__pertool__linear_list_projects",
+            "mcp__pertool__linear_list_initiatives",
+            "mcp__pertool__linear_list_issues",
+            "mcp__pertool__linear_list_issues"
+          ],
+          "calls_by_server": {
+            "other": 2,
+            "pertool": 5
+          },
+          "graph_share": 0.0,
+          "billable_input": 179205,
+          "cost_usd": 0.16237600000000002,
+          "duration_ms": 39375
+        }
+      ]
+    },
+    {
+      "qid": "H4-initiatives-at-risk",
+      "hops": 4,
+      "arm": "integrations_plus_graph",
+      "crosses_identity": false,
+      "runs": 3,
+      "errors": 0,
+      "correct": 2,
+      "accuracy": 0.667,
+      "distinct_answers": 2,
+      "named_distractor_runs": 0,
+      "mean_tool_calls": 7.67,
+      "mean_graph_share": 0.485,
+      "mean_cost_usd": 0.1231,
+      "total_cost_usd": 0.3693,
+      "tool_histogram": {
+        "ToolSearch": 7,
+        "mcp__pertool__linear_list_users": 1,
+        "mcp__numen__numen_list_tasks": 1,
+        "mcp__numen__numen_get_blocking_chain": 2,
+        "mcp__pertool__linear_list_projects": 1,
+        "mcp__numen__numen_get_task_context": 6,
+        "mcp__pertool__linear_list_initiatives": 3,
+        "mcp__numen__numen_get_person_workload": 2
+      },
+      "detail": [
+        {
+          "parsed": true,
+          "got": [
+            "goal-latency"
+          ],
+          "correct": false,
+          "missing": [
+            "goal-igor-infra",
+            "goal-infra-cost"
+          ],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 11,
+          "tools": [
+            "ToolSearch",
+            "mcp__pertool__linear_list_users",
+            "ToolSearch",
+            "mcp__numen__numen_list_tasks",
+            "mcp__numen__numen_get_blocking_chain",
+            "mcp__numen__numen_get_blocking_chain",
+            "mcp__pertool__linear_list_projects",
+            "ToolSearch",
+            "mcp__numen__numen_get_task_context",
+            "mcp__numen__numen_get_task_context",
+            "mcp__pertool__linear_list_initiatives"
+          ],
+          "calls_by_server": {
+            "other": 3,
+            "pertool": 3,
+            "numen": 5
+          },
+          "graph_share": 0.455,
+          "billable_input": 287318,
+          "cost_usd": 0.2079416,
+          "duration_ms": 52238
+        },
+        {
+          "parsed": true,
+          "got": [
+            "goal-igor-infra",
+            "goal-infra-cost",
+            "goal-latency"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 6,
+          "tools": [
+            "ToolSearch",
+            "ToolSearch",
+            "mcp__numen__numen_get_person_workload",
+            "mcp__numen__numen_get_task_context",
+            "mcp__numen__numen_get_task_context",
+            "mcp__pertool__linear_list_initiatives"
+          ],
+          "calls_by_server": {
+            "other": 2,
+            "numen": 3,
+            "pertool": 1
+          },
+          "graph_share": 0.5,
+          "billable_input": 146455,
+          "cost_usd": 0.0787414,
+          "duration_ms": 23114
+        },
+        {
+          "parsed": true,
+          "got": [
+            "goal-igor-infra",
+            "goal-infra-cost",
+            "goal-latency"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 6,
+          "tools": [
+            "ToolSearch",
+            "ToolSearch",
+            "mcp__numen__numen_get_person_workload",
+            "mcp__numen__numen_get_task_context",
+            "mcp__numen__numen_get_task_context",
+            "mcp__pertool__linear_list_initiatives"
+          ],
+          "calls_by_server": {
+            "other": 2,
+            "numen": 3,
+            "pertool": 1
+          },
+          "graph_share": 0.5,
+          "billable_input": 148760,
+          "cost_usd": 0.0825932,
+          "duration_ms": 26601
+        }
+      ]
+    }
+  ]
+}

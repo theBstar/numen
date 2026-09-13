@@ -169,6 +169,70 @@ async def numen_get_person_workload(args):
     })
 
 
+@tool(
+    "numen_get_blocking_chain",
+    "What a task is holding up: the tasks it blocks, and who owns each of them. "
+    "People are already resolved across GitHub, Linear and Slack.",
+    {"task": str},
+)
+async def numen_get_blocking_chain(args):
+    key = (args.get("task") or "").upper()
+    rel = pj._relations().get(key, [])
+    downstream = []
+    for r in rel:
+        if r["type"] != "blocks":
+            continue
+        other = r["relatedIssue"]["identifier"]
+        try:
+            t = q.issue(other)
+        except StopIteration:
+            continue
+        owner = _person_of_linear(t["assignee"]["id"])
+        downstream.append({
+            "task": other,
+            "title": t["title"],
+            "owner": {"person": owner,
+                      "name": BY_KEY[owner].real_name if owner else None,
+                      "linear_id": t["assignee"]["id"]},
+        })
+    return _out({"task": key, "blocks": downstream})
+
+
+@tool(
+    "numen_get_person_prs",
+    "Pull requests a person authored or is requested to review. Accepts any handle "
+    "they hold in any system.",
+    {"who": str, "role": str},
+)
+async def numen_get_person_prs(args):
+    who = (args.get("who") or "").strip().lower()
+    key = None
+    for k, ident in BY_KEY.items():
+        names = {k.lower(), ident.real_name.lower()}
+        for src in ("github", "linear", "slack"):
+            si = getattr(ident, src)
+            if si:
+                names.add(si.handle.lower())
+                if si.display_name:
+                    names.add(si.display_name.lower())
+        if who in names:
+            key = k
+            break
+    if key is None:
+        return _out({"error": f"no person matching {who!r}"})
+    login = BY_KEY[key].github.handle if BY_KEY[key].github else None
+    authored = [p for p in q.PULLS if p["user"]["login"] == login]
+    reviewing = [p for p in q.PULLS
+                 if any(r["login"] == login for r in p.get("requested_reviewers", []))]
+    role = (args.get("role") or "").lower()
+    if role == "author":
+        reviewing = []
+    elif role in ("reviewer", "review"):
+        authored = []
+    return _out({"person": key, "name": BY_KEY[key].real_name,
+                 "authored": authored, "awaiting_their_review": reviewing})
+
+
 @tool("numen_get_delayed_projects", "Urgent in-flight work with the projects and initiatives it exposes.", NO_ARGS)
 async def numen_get_delayed_projects(args):
     urgent = [i for i in q.ISSUES
@@ -178,18 +242,31 @@ async def numen_get_delayed_projects(args):
 
 GRAPH_SERVER = create_sdk_mcp_server(
     name="numen",
-    tools=[numen_list_tasks, numen_get_task_context,
-           numen_get_person_workload, numen_get_delayed_projects],
+    tools=[numen_list_tasks, numen_get_task_context, numen_get_person_workload,
+           numen_get_blocking_chain, numen_get_person_prs, numen_get_delayed_projects],
 )
 
 GRAPH_ALLOWED = [
     "mcp__numen__numen_list_tasks",
     "mcp__numen__numen_get_task_context",
     "mcp__numen__numen_get_person_workload",
+    "mcp__numen__numen_get_blocking_chain",
+    "mcp__numen__numen_get_person_prs",
     "mcp__numen__numen_get_delayed_projects",
 ]
 
 ARMS = {
+    # Experiments 3: graph instead of the integrations.
     "per_tool": {"servers": {"pertool": PER_TOOL_SERVER}, "allowed": PER_TOOL_ALLOWED},
     "graph": {"servers": {"numen": GRAPH_SERVER}, "allowed": GRAPH_ALLOWED},
+    # Experiment 4: the deployment people actually have. Nobody disconnects
+    # their MCP servers when they add a context layer, so the second arm keeps
+    # every integration and gains the graph on top. That also lets us measure
+    # something the graph-only arm cannot: whether the model reaches for the
+    # graph when the raw tools are right there beside it.
+    "integrations": {"servers": {"pertool": PER_TOOL_SERVER}, "allowed": PER_TOOL_ALLOWED},
+    "integrations_plus_graph": {
+        "servers": {"pertool": PER_TOOL_SERVER, "numen": GRAPH_SERVER},
+        "allowed": PER_TOOL_ALLOWED + GRAPH_ALLOWED,
+    },
 }

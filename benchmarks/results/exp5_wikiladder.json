@@ -1,0 +1,1045 @@
+{
+  "model": "claude-sonnet-5",
+  "runs": 3,
+  "rows": [
+    {
+      "qid": "W1-which-doc",
+      "hops": 1,
+      "arm": "docs",
+      "crosses_identity": null,
+      "runs": 3,
+      "errors": 0,
+      "correct": 3,
+      "accuracy": 1.0,
+      "distinct_answers": 1,
+      "named_distractor_runs": 0,
+      "mean_tool_calls": 2,
+      "mean_graph_share": 0.0,
+      "mean_cost_usd": 0.0391,
+      "total_cost_usd": 0.1174,
+      "tool_histogram": {
+        "ToolSearch": 3,
+        "mcp__docs__docs_search": 3
+      },
+      "detail": [
+        {
+          "parsed": true,
+          "got": [
+            "PRD-001"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 2,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_search"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "docs": 1
+          },
+          "graph_share": 0.0,
+          "billable_input": 64420,
+          "cost_usd": 0.04937,
+          "duration_ms": 5789
+        },
+        {
+          "parsed": true,
+          "got": [
+            "PRD-001"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 2,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_search"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "docs": 1
+          },
+          "graph_share": 0.0,
+          "billable_input": 65811,
+          "cost_usd": 0.0348116,
+          "duration_ms": 8007
+        },
+        {
+          "parsed": true,
+          "got": [
+            "PRD-001"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 2,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_search"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "docs": 1
+          },
+          "graph_share": 0.0,
+          "billable_input": 65961,
+          "cost_usd": 0.033256799999999996,
+          "duration_ms": 9587
+        }
+      ]
+    },
+    {
+      "qid": "W1-which-doc",
+      "hops": 1,
+      "arm": "docs_plus_wiki",
+      "crosses_identity": null,
+      "runs": 3,
+      "errors": 0,
+      "correct": 3,
+      "accuracy": 1.0,
+      "distinct_answers": 1,
+      "named_distractor_runs": 0,
+      "mean_tool_calls": 2,
+      "mean_graph_share": 0.0,
+      "mean_cost_usd": 0.0397,
+      "total_cost_usd": 0.1191,
+      "tool_histogram": {
+        "ToolSearch": 3,
+        "mcp__docs__docs_search": 3
+      },
+      "detail": [
+        {
+          "parsed": true,
+          "got": [
+            "PRD-001"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 2,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_search"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "docs": 1
+          },
+          "graph_share": 0.0,
+          "billable_input": 65003,
+          "cost_usd": 0.0508906,
+          "duration_ms": 7527
+        },
+        {
+          "parsed": true,
+          "got": [
+            "PRD-001"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 2,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_search"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "docs": 1
+          },
+          "graph_share": 0.0,
+          "billable_input": 66157,
+          "cost_usd": 0.0330108,
+          "duration_ms": 9410
+        },
+        {
+          "parsed": true,
+          "got": [
+            "PRD-001"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 2,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_search"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "docs": 1
+          },
+          "graph_share": 0.0,
+          "billable_input": 64999,
+          "cost_usd": 0.0352126,
+          "duration_ms": 6692
+        }
+      ]
+    },
+    {
+      "qid": "W2-doc-author",
+      "hops": 2,
+      "arm": "docs",
+      "crosses_identity": null,
+      "runs": 3,
+      "errors": 0,
+      "correct": 3,
+      "accuracy": 1.0,
+      "distinct_answers": 1,
+      "named_distractor_runs": 0,
+      "mean_tool_calls": 3,
+      "mean_graph_share": 0.0,
+      "mean_cost_usd": 0.0477,
+      "total_cost_usd": 0.143,
+      "tool_histogram": {
+        "ToolSearch": 3,
+        "mcp__docs__docs_search": 3,
+        "mcp__pertool__linear_list_users": 3
+      },
+      "detail": [
+        {
+          "parsed": true,
+          "got": [
+            "eve.patel"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 3,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_search",
+            "mcp__pertool__linear_list_users"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "docs": 1,
+            "pertool": 1
+          },
+          "graph_share": 0.0,
+          "billable_input": 89723,
+          "cost_usd": 0.058582800000000004,
+          "duration_ms": 8129
+        },
+        {
+          "parsed": true,
+          "got": [
+            "eve.patel"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 3,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_search",
+            "mcp__pertool__linear_list_users"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "docs": 1,
+            "pertool": 1
+          },
+          "graph_share": 0.0,
+          "billable_input": 86469,
+          "cost_usd": 0.0411058,
+          "duration_ms": 12975
+        },
+        {
+          "parsed": true,
+          "got": [
+            "eve.patel"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 3,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_search",
+            "mcp__pertool__linear_list_users"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "docs": 1,
+            "pertool": 1
+          },
+          "graph_share": 0.0,
+          "billable_input": 89724,
+          "cost_usd": 0.0432936,
+          "duration_ms": 8169
+        }
+      ]
+    },
+    {
+      "qid": "W2-doc-author",
+      "hops": 2,
+      "arm": "docs_plus_wiki",
+      "crosses_identity": null,
+      "runs": 3,
+      "errors": 0,
+      "correct": 3,
+      "accuracy": 1.0,
+      "distinct_answers": 1,
+      "named_distractor_runs": 0,
+      "mean_tool_calls": 3.33,
+      "mean_graph_share": 0.0,
+      "mean_cost_usd": 0.0508,
+      "total_cost_usd": 0.1523,
+      "tool_histogram": {
+        "ToolSearch": 4,
+        "mcp__docs__docs_search": 3,
+        "mcp__pertool__linear_list_users": 3
+      },
+      "detail": [
+        {
+          "parsed": true,
+          "got": [
+            "eve.patel"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 3,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_search",
+            "mcp__pertool__linear_list_users"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "docs": 1,
+            "pertool": 1
+          },
+          "graph_share": 0.0,
+          "billable_input": 89617,
+          "cost_usd": 0.059178400000000006,
+          "duration_ms": 10332
+        },
+        {
+          "parsed": true,
+          "got": [
+            "eve.patel"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 4,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_search",
+            "ToolSearch",
+            "mcp__pertool__linear_list_users"
+          ],
+          "calls_by_server": {
+            "other": 2,
+            "docs": 1,
+            "pertool": 1
+          },
+          "graph_share": 0.0,
+          "billable_input": 116140,
+          "cost_usd": 0.0498426,
+          "duration_ms": 14759
+        },
+        {
+          "parsed": true,
+          "got": [
+            "eve.patel"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 3,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_search",
+            "mcp__pertool__linear_list_users"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "docs": 1,
+            "pertool": 1
+          },
+          "graph_share": 0.0,
+          "billable_input": 91172,
+          "cost_usd": 0.0432654,
+          "duration_ms": 10214
+        }
+      ]
+    },
+    {
+      "qid": "W3-who-is-building-it",
+      "hops": 3,
+      "arm": "docs",
+      "crosses_identity": null,
+      "runs": 3,
+      "errors": 0,
+      "correct": 3,
+      "accuracy": 1.0,
+      "distinct_answers": 1,
+      "named_distractor_runs": 0,
+      "mean_tool_calls": 6.67,
+      "mean_graph_share": 0.0,
+      "mean_cost_usd": 0.1362,
+      "total_cost_usd": 0.4085,
+      "tool_histogram": {
+        "ToolSearch": 4,
+        "mcp__docs__docs_get": 3,
+        "mcp__pertool__linear_list_projects": 3,
+        "mcp__pertool__linear_list_users": 3,
+        "mcp__pertool__linear_list_initiatives": 2,
+        "mcp__pertool__linear_list_issues": 3,
+        "mcp__docs__docs_search": 2
+      },
+      "detail": [
+        {
+          "parsed": true,
+          "got": [
+            "hannah.lee",
+            "lisa.park"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 6,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_get",
+            "mcp__pertool__linear_list_projects",
+            "mcp__pertool__linear_list_users",
+            "mcp__pertool__linear_list_initiatives",
+            "mcp__pertool__linear_list_issues"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "docs": 1,
+            "pertool": 4
+          },
+          "graph_share": 0.0,
+          "billable_input": 160479,
+          "cost_usd": 0.1452504,
+          "duration_ms": 27785
+        },
+        {
+          "parsed": true,
+          "got": [
+            "hannah.lee",
+            "lisa.park"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 5,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_get",
+            "mcp__pertool__linear_list_projects",
+            "mcp__pertool__linear_list_users",
+            "mcp__pertool__linear_list_issues"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "docs": 1,
+            "pertool": 3
+          },
+          "graph_share": 0.0,
+          "billable_input": 129500,
+          "cost_usd": 0.1075594,
+          "duration_ms": 12916
+        },
+        {
+          "parsed": true,
+          "got": [
+            "hannah.lee",
+            "lisa.park"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 9,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_get",
+            "mcp__pertool__linear_list_projects",
+            "mcp__pertool__linear_list_users",
+            "mcp__docs__docs_search",
+            "mcp__docs__docs_search",
+            "ToolSearch",
+            "mcp__pertool__linear_list_initiatives",
+            "mcp__pertool__linear_list_issues"
+          ],
+          "calls_by_server": {
+            "other": 2,
+            "docs": 3,
+            "pertool": 4
+          },
+          "graph_share": 0.0,
+          "billable_input": 220184,
+          "cost_usd": 0.1556418,
+          "duration_ms": 29160
+        }
+      ]
+    },
+    {
+      "qid": "W3-who-is-building-it",
+      "hops": 3,
+      "arm": "docs_plus_wiki",
+      "crosses_identity": null,
+      "runs": 3,
+      "errors": 0,
+      "correct": 3,
+      "accuracy": 1.0,
+      "distinct_answers": 1,
+      "named_distractor_runs": 0,
+      "mean_tool_calls": 2,
+      "mean_graph_share": 0.5,
+      "mean_cost_usd": 0.0393,
+      "total_cost_usd": 0.1178,
+      "tool_histogram": {
+        "ToolSearch": 3,
+        "mcp__wiki__wiki_feature_for_document": 3
+      },
+      "detail": [
+        {
+          "parsed": true,
+          "got": [
+            "hannah.lee",
+            "lisa.park"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 2,
+          "tools": [
+            "ToolSearch",
+            "mcp__wiki__wiki_feature_for_document"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "wiki": 1
+          },
+          "graph_share": 0.5,
+          "billable_input": 66602,
+          "cost_usd": 0.049671,
+          "duration_ms": 10544
+        },
+        {
+          "parsed": true,
+          "got": [
+            "hannah.lee",
+            "lisa.park"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 2,
+          "tools": [
+            "ToolSearch",
+            "mcp__wiki__wiki_feature_for_document"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "wiki": 1
+          },
+          "graph_share": 0.5,
+          "billable_input": 66246,
+          "cost_usd": 0.03309,
+          "duration_ms": 8104
+        },
+        {
+          "parsed": true,
+          "got": [
+            "hannah.lee",
+            "lisa.park"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 2,
+          "tools": [
+            "ToolSearch",
+            "mcp__wiki__wiki_feature_for_document"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "wiki": 1
+          },
+          "graph_share": 0.5,
+          "billable_input": 65094,
+          "cost_usd": 0.0350272,
+          "duration_ms": 9974
+        }
+      ]
+    },
+    {
+      "qid": "W4-doc-to-initiative",
+      "hops": 4,
+      "arm": "docs",
+      "crosses_identity": null,
+      "runs": 3,
+      "errors": 0,
+      "correct": 1,
+      "accuracy": 0.333,
+      "distinct_answers": 2,
+      "named_distractor_runs": 2,
+      "mean_tool_calls": 5,
+      "mean_graph_share": 0.0,
+      "mean_cost_usd": 0.0844,
+      "total_cost_usd": 0.2531,
+      "tool_histogram": {
+        "ToolSearch": 5,
+        "mcp__docs__docs_get": 3,
+        "mcp__pertool__linear_list_projects": 3,
+        "mcp__pertool__linear_list_initiatives": 3,
+        "mcp__pertool__linear_list_issues": 1
+      },
+      "detail": [
+        {
+          "parsed": true,
+          "got": [
+            "goal-bob-connectors",
+            "goal-integrations"
+          ],
+          "correct": false,
+          "missing": [
+            "goal-igor-infra",
+            "goal-infra-cost",
+            "goal-latency"
+          ],
+          "spurious": [
+            "goal-bob-connectors",
+            "goal-integrations"
+          ],
+          "named_distractor": [
+            "goal-integrations"
+          ],
+          "tool_calls": 5,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_get",
+            "ToolSearch",
+            "mcp__pertool__linear_list_projects",
+            "mcp__pertool__linear_list_initiatives"
+          ],
+          "calls_by_server": {
+            "other": 2,
+            "docs": 1,
+            "pertool": 2
+          },
+          "graph_share": 0.0,
+          "billable_input": 116778,
+          "cost_usd": 0.078885,
+          "duration_ms": 13987
+        },
+        {
+          "parsed": true,
+          "got": [
+            "goal-bob-connectors",
+            "goal-integrations"
+          ],
+          "correct": false,
+          "missing": [
+            "goal-igor-infra",
+            "goal-infra-cost",
+            "goal-latency"
+          ],
+          "spurious": [
+            "goal-bob-connectors",
+            "goal-integrations"
+          ],
+          "named_distractor": [
+            "goal-integrations"
+          ],
+          "tool_calls": 4,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_get",
+            "mcp__pertool__linear_list_initiatives",
+            "mcp__pertool__linear_list_projects"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "docs": 1,
+            "pertool": 2
+          },
+          "graph_share": 0.0,
+          "billable_input": 68005,
+          "cost_usd": 0.0506326,
+          "duration_ms": 9783
+        },
+        {
+          "parsed": true,
+          "got": [
+            "goal-igor-infra",
+            "goal-infra-cost",
+            "goal-latency"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 6,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_get",
+            "mcp__pertool__linear_list_initiatives",
+            "mcp__pertool__linear_list_projects",
+            "ToolSearch",
+            "mcp__pertool__linear_list_issues"
+          ],
+          "calls_by_server": {
+            "other": 2,
+            "docs": 1,
+            "pertool": 3
+          },
+          "graph_share": 0.0,
+          "billable_input": 160746,
+          "cost_usd": 0.1235886,
+          "duration_ms": 20153
+        }
+      ]
+    },
+    {
+      "qid": "W4-doc-to-initiative",
+      "hops": 4,
+      "arm": "docs_plus_wiki",
+      "crosses_identity": null,
+      "runs": 3,
+      "errors": 0,
+      "correct": 3,
+      "accuracy": 1.0,
+      "distinct_answers": 1,
+      "named_distractor_runs": 0,
+      "mean_tool_calls": 4,
+      "mean_graph_share": 0.522,
+      "mean_cost_usd": 0.0505,
+      "total_cost_usd": 0.1516,
+      "tool_histogram": {
+        "ToolSearch": 4,
+        "mcp__docs__docs_get": 2,
+        "mcp__wiki__wiki_feature_for_document": 2,
+        "mcp__wiki__wiki_trace_to_goals": 3,
+        "mcp__wiki__wiki_list_features": 1
+      },
+      "detail": [
+        {
+          "parsed": true,
+          "got": [
+            "goal-igor-infra",
+            "goal-infra-cost",
+            "goal-latency"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 5,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_get",
+            "ToolSearch",
+            "mcp__wiki__wiki_feature_for_document",
+            "mcp__wiki__wiki_trace_to_goals"
+          ],
+          "calls_by_server": {
+            "other": 2,
+            "docs": 1,
+            "wiki": 2
+          },
+          "graph_share": 0.4,
+          "billable_input": 115748,
+          "cost_usd": 0.0659024,
+          "duration_ms": 14097
+        },
+        {
+          "parsed": true,
+          "got": [
+            "goal-igor-infra",
+            "goal-infra-cost",
+            "goal-latency"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 4,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_get",
+            "mcp__wiki__wiki_list_features",
+            "mcp__wiki__wiki_trace_to_goals"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "docs": 1,
+            "wiki": 2
+          },
+          "graph_share": 0.5,
+          "billable_input": 114787,
+          "cost_usd": 0.0470854,
+          "duration_ms": 13970
+        },
+        {
+          "parsed": true,
+          "got": [
+            "goal-igor-infra",
+            "goal-infra-cost",
+            "goal-latency"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 3,
+          "tools": [
+            "ToolSearch",
+            "mcp__wiki__wiki_feature_for_document",
+            "mcp__wiki__wiki_trace_to_goals"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "wiki": 2
+          },
+          "graph_share": 0.667,
+          "billable_input": 89894,
+          "cost_usd": 0.038639400000000004,
+          "duration_ms": 9977
+        }
+      ]
+    },
+    {
+      "qid": "W5-contradiction",
+      "hops": 2,
+      "arm": "docs",
+      "crosses_identity": null,
+      "runs": 3,
+      "errors": 0,
+      "correct": 3,
+      "accuracy": 1.0,
+      "distinct_answers": 1,
+      "named_distractor_runs": 0,
+      "mean_tool_calls": 5.67,
+      "mean_graph_share": 0.0,
+      "mean_cost_usd": 0.0603,
+      "total_cost_usd": 0.181,
+      "tool_histogram": {
+        "ToolSearch": 3,
+        "mcp__docs__docs_search": 5,
+        "mcp__docs__docs_list": 3,
+        "mcp__docs__docs_get": 6
+      },
+      "detail": [
+        {
+          "parsed": true,
+          "got": [
+            "PRD-002",
+            "PRD-006"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 6,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_search",
+            "mcp__docs__docs_list",
+            "mcp__docs__docs_search",
+            "mcp__docs__docs_get",
+            "mcp__docs__docs_get"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "docs": 5
+          },
+          "graph_share": 0.0,
+          "billable_input": 114791,
+          "cost_usd": 0.0710208,
+          "duration_ms": 16245
+        },
+        {
+          "parsed": true,
+          "got": [
+            "PRD-002",
+            "PRD-006"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 6,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_search",
+            "mcp__docs__docs_search",
+            "mcp__docs__docs_list",
+            "mcp__docs__docs_get",
+            "mcp__docs__docs_get"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "docs": 5
+          },
+          "graph_share": 0.0,
+          "billable_input": 114861,
+          "cost_usd": 0.0565824,
+          "duration_ms": 12462
+        },
+        {
+          "parsed": true,
+          "got": [
+            "PRD-002",
+            "PRD-006"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 5,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_search",
+            "mcp__docs__docs_list",
+            "mcp__docs__docs_get",
+            "mcp__docs__docs_get"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "docs": 4
+          },
+          "graph_share": 0.0,
+          "billable_input": 114529,
+          "cost_usd": 0.053405400000000006,
+          "duration_ms": 14771
+        }
+      ]
+    },
+    {
+      "qid": "W5-contradiction",
+      "hops": 2,
+      "arm": "docs_plus_wiki",
+      "crosses_identity": null,
+      "runs": 3,
+      "errors": 0,
+      "correct": 3,
+      "accuracy": 1.0,
+      "distinct_answers": 1,
+      "named_distractor_runs": 0,
+      "mean_tool_calls": 5.67,
+      "mean_graph_share": 0.0,
+      "mean_cost_usd": 0.0579,
+      "total_cost_usd": 0.1738,
+      "tool_histogram": {
+        "ToolSearch": 3,
+        "mcp__docs__docs_search": 5,
+        "mcp__docs__docs_get": 7,
+        "mcp__docs__docs_list": 2
+      },
+      "detail": [
+        {
+          "parsed": true,
+          "got": [
+            "PRD-002",
+            "PRD-006"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 4,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_search",
+            "mcp__docs__docs_get",
+            "mcp__docs__docs_get"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "docs": 3
+          },
+          "graph_share": 0.0,
+          "billable_input": 90366,
+          "cost_usd": 0.059969400000000006,
+          "duration_ms": 14746
+        },
+        {
+          "parsed": true,
+          "got": [
+            "PRD-002",
+            "PRD-006"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 7,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_search",
+            "mcp__docs__docs_search",
+            "mcp__docs__docs_list",
+            "mcp__docs__docs_get",
+            "mcp__docs__docs_get",
+            "mcp__docs__docs_get"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "docs": 6
+          },
+          "graph_share": 0.0,
+          "billable_input": 115159,
+          "cost_usd": 0.0579702,
+          "duration_ms": 12291
+        },
+        {
+          "parsed": true,
+          "got": [
+            "PRD-002",
+            "PRD-006"
+          ],
+          "correct": true,
+          "missing": [],
+          "spurious": [],
+          "named_distractor": [],
+          "tool_calls": 6,
+          "tools": [
+            "ToolSearch",
+            "mcp__docs__docs_search",
+            "mcp__docs__docs_search",
+            "mcp__docs__docs_list",
+            "mcp__docs__docs_get",
+            "mcp__docs__docs_get"
+          ],
+          "calls_by_server": {
+            "other": 1,
+            "docs": 5
+          },
+          "graph_share": 0.0,
+          "billable_input": 115836,
+          "cost_usd": 0.055810399999999996,
+          "duration_ms": 16716
+        }
+      ]
+    }
+  ]
+}
