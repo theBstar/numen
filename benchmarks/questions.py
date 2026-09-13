@@ -34,7 +34,14 @@ def issue(identifier: str) -> dict:
 
 
 def pulls_for(task_key: str) -> list[dict]:
-    return [p for p in PULLS if task_key in p["title"] or task_key in p["head"]["ref"]]
+    """Pull requests carrying a Linear key, matched the way an agent would.
+
+    Case-insensitive across title and branch, because that is the only signal
+    GitHub exposes - there is no index on Linear keys.
+    """
+    k = task_key.lower()
+    return [p for p in PULLS
+            if k in p["title"].lower() or k in p["head"]["ref"].lower()]
 
 
 def project_for(task_key: str) -> dict | None:
@@ -77,6 +84,13 @@ class Question:
     graph: list[Call]
     note: str = ""
     answer: object = field(default=None)
+    #: The exact set of identifiers a correct answer names. Grading for
+    #: experiment 3 is set equality against this - no judge model, no partial
+    #: credit for prose that sounds right.
+    expected_ids: list[str] = field(default_factory=list)
+    #: Identifiers that are plausible but wrong. Naming one of these is how a
+    #: false identity merge shows up in an answer rather than in a metric.
+    distractor_ids: list[str] = field(default_factory=list)
 
 
 # ── T0: one source, no cross-source hop ───────────────────────────────────
@@ -86,12 +100,13 @@ _urgent = [i for i in ISSUES if i["priority"] == "urgent"]
 Q1 = Question(
     qid="T0-urgent",
     hops=0,
-    text="What are the urgent tickets right now?",
+    text="Which tickets are urgent priority? Return their Linear keys.",
     needs_identity_join=False,
     note="Single source. Linear can filter server side; so can the graph.",
     per_tool=[Call("linear", "issues(filter:{priority:urgent})", _urgent)],
     graph=[Call("numen", "list_tasks(priority=urgent)", _urgent)],
     answer=[i["identifier"] for i in _urgent],
+    expected_ids=[i["identifier"] for i in _urgent],
 )
 
 _alice_issues = issues_for_person("alice")
@@ -99,12 +114,13 @@ _alice_issues = issues_for_person("alice")
 Q2 = Question(
     qid="T0-assigned",
     hops=0,
-    text="Which tickets is the Linear user alice.chen assigned?",
+    text="Which tickets is the Linear user alice.chen assigned? Return their Linear keys.",
     needs_identity_join=False,
     note="Asked in Linear's own vocabulary, so no identity work is required.",
     per_tool=[Call("linear", "issues(filter:{assignee:alice.chen})", _alice_issues)],
     graph=[Call("numen", "get_person_tasks(alice)", _alice_issues)],
     answer=[i["identifier"] for i in _alice_issues],
+    expected_ids=[i["identifier"] for i in _alice_issues],
 )
 
 # ── T1: one cross-source hop ──────────────────────────────────────────────
@@ -115,7 +131,7 @@ _t1_prs = pulls_for("ENG-4501")
 Q3 = Question(
     qid="T1-pr-for-ticket",
     hops=1,
-    text="Which pull request implements ENG-4501?",
+    text="Which pull request implements ENG-4501? Return its number.",
     needs_identity_join=False,
     note=(
         "GitHub has no index on Linear keys, so the per-tool arm must list pull "
@@ -127,6 +143,8 @@ Q3 = Question(
     ],
     graph=[Call("numen", "get_task_context(ENG-4501)", {"task": _t1_task, "prs": _t1_prs})],
     answer=[p["number"] for p in _t1_prs],
+    expected_ids=[str(p["number"]) for p in _t1_prs],
+    distractor_ids=[str(p["number"]) for p in PULLS if p not in _t1_prs][:4],
 )
 
 # ── T2: cross-source hop that crosses an identity boundary ────────────────
@@ -138,7 +156,10 @@ _t2_other = issues_for_person("igor")
 Q4 = Question(
     qid="T2-author-workload",
     hops=2,
-    text="Who wrote the pull request for ENG-4502, and what else are they carrying?",
+    text=(
+        "The pull request for ENG-4502 has an author. Which Linear tickets is that "
+        "same person assigned? Return only the Linear keys."
+    ),
     needs_identity_join=True,
     note=(
         "The PR names a GitHub login; the other tickets are keyed by a Linear user. "
@@ -154,6 +175,8 @@ Q4 = Question(
     graph=[Call("numen", "get_person_workload(from pr ENG-4502)",
                 {"person": "igor", "prs": _t2_prs, "tasks": _t2_other})],
     answer={"person": "igor", "other_tasks": [i["identifier"] for i in _t2_other]},
+    expected_ids=[i["identifier"] for i in _t2_other],
+    distractor_ids=[i["identifier"] for i in issues_for_person("julia")][:4],
 )
 
 _alice_prs = pulls_by_person("alice")
@@ -161,7 +184,10 @@ _alice_prs = pulls_by_person("alice")
 Q5 = Question(
     qid="T2-review-queue",
     hops=2,
-    text="Of Alice's assigned tickets, which have a pull request waiting on review?",
+    text=(
+        "Which currently open pull requests were authored by Alice Chen? "
+        "Return only the pull request numbers."
+    ),
     needs_identity_join=True,
     note="Needs the Linear-to-GitHub person link, then a per-ticket PR match.",
     per_tool=[
@@ -173,6 +199,9 @@ Q5 = Question(
     graph=[Call("numen", "get_person_prs(alice, state=open)",
                 {"tasks": _alice_issues, "prs": _alice_prs})],
     answer=[p["number"] for p in _alice_prs if p["state"] == "open"],
+    expected_ids=[str(p["number"]) for p in _alice_prs if p["state"] == "open"],
+    distractor_ids=[str(p["number"]) for p in pulls_by_person("andrew")]
+    if "andrew" in BY_KEY else [],
 )
 
 # ── T3: three hops, ending at a goal ──────────────────────────────────────
@@ -185,7 +214,7 @@ _t3_init = initiative(_t3_nodes[0]["id"]) if _t3_nodes else None
 Q6 = Question(
     qid="T3-goal-exposure",
     hops=3,
-    text="Which company initiative is exposed by ENG-4501 slipping, and who owns it?",
+    text="Which company initiative is exposed if ENG-4501 slips? Return the initiative id.",
     needs_identity_join=False,
     note=(
         "ticket -> project -> initiative -> owner. Linear can nest within itself, but "
@@ -200,15 +229,28 @@ Q6 = Question(
     graph=[Call("numen", "get_goal_progress(via ENG-4501)",
                 {"task": _t3_task, "project": _t3_project, "initiative": _t3_init})],
     answer={"initiative": _t3_init["id"] if _t3_init else None},
+    expected_ids=[_t3_init["id"]] if _t3_init else [],
+    distractor_ids=[g["id"] for g in INITIATIVES if not _t3_init or g["id"] != _t3_init["id"]][:4],
 )
 
 _blocked = [i for i in ISSUES if i["state"]["name"] in ("in_review", "in_progress")
             and i["priority"] == "urgent"]
 
+# The initiatives reachable from those tickets, via their projects. This is the
+# full three-hop walk the question actually asks for.
+_blocked_inits = set()
+for _i in _blocked:
+    _p = project_for(_i["identifier"])
+    for _n in (_p["initiatives"]["nodes"] if _p else []):
+        _blocked_inits.add(_n["id"])
+
 Q7 = Question(
     qid="T3-at-risk-owners",
     hops=3,
-    text="Across urgent in-flight work, which initiatives are exposed and who is reviewing?",
+    text=(
+        "Across every urgent in-flight ticket, which company initiatives are exposed? "
+        "Return only the initiative ids."
+    ),
     needs_identity_join=True,
     note="The widest question in the set: tickets, projects, initiatives, PRs and reviewers.",
     per_tool=[
@@ -221,7 +263,8 @@ Q7 = Question(
     ],
     graph=[Call("numen", "get_delayed_projects()",
                 {"tasks": _blocked, "projects": PROJECTS[:3], "initiatives": INITIATIVES[:3]})],
-    answer={"urgent_in_flight": [i["identifier"] for i in _blocked]},
+    answer={"initiatives": sorted(_blocked_inits)},
+    expected_ids=sorted(_blocked_inits),
 )
 
 QUESTIONS: tuple[Question, ...] = (Q1, Q2, Q3, Q4, Q5, Q6, Q7)

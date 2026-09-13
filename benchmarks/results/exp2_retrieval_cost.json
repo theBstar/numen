@@ -4,8 +4,8 @@
   "totals": {
     "per_tool_calls": 21,
     "graph_calls": 7,
-    "per_tool_bytes": 50805,
-    "graph_bytes": 16686
+    "per_tool_bytes": 51336,
+    "graph_bytes": 17417
   },
   "by_hop_tier": {
     "0": {
@@ -21,35 +21,35 @@
       "questions": 1,
       "per_tool_calls": 2,
       "graph_calls": 1,
-      "per_tool_bytes": 6396,
-      "graph_bytes": 354,
+      "per_tool_bytes": 6558,
+      "graph_bytes": 697,
       "calls_ratio": 2.0,
-      "bytes_ratio": 18.07
+      "bytes_ratio": 9.41
     },
     "2": {
       "questions": 2,
       "per_tool_calls": 8,
       "graph_calls": 2,
-      "per_tool_bytes": 15780,
-      "graph_bytes": 6625,
+      "per_tool_bytes": 15987,
+      "graph_bytes": 7013,
       "calls_ratio": 4.0,
-      "bytes_ratio": 2.38
+      "bytes_ratio": 2.28
     },
     "3": {
       "questions": 2,
       "per_tool_calls": 9,
       "graph_calls": 2,
-      "per_tool_bytes": 23783,
+      "per_tool_bytes": 23945,
       "graph_bytes": 4861,
       "calls_ratio": 4.5,
-      "bytes_ratio": 4.89
+      "bytes_ratio": 4.93
     }
   },
   "questions": [
     {
       "qid": "T0-urgent",
       "hops": 0,
-      "question": "What are the urgent tickets right now?",
+      "question": "Which tickets are urgent priority? Return their Linear keys.",
       "needs_identity_join": false,
       "note": "Single source. Linear can filter server side; so can the graph.",
       "answer_bytes": 56,
@@ -75,7 +75,7 @@
     {
       "qid": "T0-assigned",
       "hops": 0,
-      "question": "Which tickets is the Linear user alice.chen assigned?",
+      "question": "Which tickets is the Linear user alice.chen assigned? Return their Linear keys.",
       "needs_identity_join": false,
       "note": "Asked in Linear's own vocabulary, so no identity work is required.",
       "answer_bytes": 100,
@@ -101,14 +101,14 @@
     {
       "qid": "T1-pr-for-ticket",
       "hops": 1,
-      "question": "Which pull request implements ENG-4501?",
+      "question": "Which pull request implements ENG-4501? Return its number.",
       "needs_identity_join": false,
       "note": "GitHub has no index on Linear keys, so the per-tool arm must list pull requests and scan titles and branches locally. The graph stores the edge.",
-      "answer_bytes": 2,
+      "answer_bytes": 5,
       "per_tool": {
         "calls": 2,
-        "bytes": 6396,
-        "waste": 3198.0,
+        "bytes": 6558,
+        "waste": 1311.6,
         "plan": [
           "linear.issue(ENG-4501)",
           "github.pulls.list(state=all)"
@@ -116,26 +116,26 @@
       },
       "graph": {
         "calls": 1,
-        "bytes": 354,
-        "waste": 177.0,
+        "bytes": 697,
+        "waste": 139.4,
         "plan": [
           "numen.get_task_context(ENG-4501)"
         ]
       },
       "calls_ratio": 2.0,
-      "bytes_ratio": 18.07
+      "bytes_ratio": 9.41
     },
     {
       "qid": "T2-author-workload",
       "hops": 2,
-      "question": "Who wrote the pull request for ENG-4502, and what else are they carrying?",
+      "question": "The pull request for ENG-4502 has an author. Which Linear tickets is that same person assigned? Return only the Linear keys.",
       "needs_identity_join": true,
       "note": "The PR names a GitHub login; the other tickets are keyed by a Linear user. Bridging them needs both rosters and a resolution attempt - which experiment 1 shows fails for this person.",
       "answer_bytes": 99,
       "per_tool": {
         "calls": 4,
-        "bytes": 9603,
-        "waste": 97.0,
+        "bytes": 9765,
+        "waste": 98.6,
         "plan": [
           "github.pulls.list(state=all)",
           "github.orgs.listMembers",
@@ -145,26 +145,26 @@
       },
       "graph": {
         "calls": 1,
-        "bytes": 2064,
-        "waste": 20.8,
+        "bytes": 2407,
+        "waste": 24.3,
         "plan": [
           "numen.get_person_workload(from pr ENG-4502)"
         ]
       },
       "calls_ratio": 4.0,
-      "bytes_ratio": 4.65
+      "bytes_ratio": 4.06
     },
     {
       "qid": "T2-review-queue",
       "hops": 2,
-      "question": "Of Alice's assigned tickets, which have a pull request waiting on review?",
+      "question": "Which currently open pull requests were authored by Alice Chen? Return only the pull request numbers.",
       "needs_identity_join": true,
       "note": "Needs the Linear-to-GitHub person link, then a per-ticket PR match.",
       "answer_bytes": 9,
       "per_tool": {
         "calls": 4,
-        "bytes": 6177,
-        "waste": 686.3,
+        "bytes": 6222,
+        "waste": 691.3,
         "plan": [
           "linear.users",
           "github.orgs.listMembers",
@@ -174,8 +174,8 @@
       },
       "graph": {
         "calls": 1,
-        "bytes": 4561,
-        "waste": 506.8,
+        "bytes": 4606,
+        "waste": 511.8,
         "plan": [
           "numen.get_person_prs(alice, state=open)"
         ]
@@ -186,7 +186,7 @@
     {
       "qid": "T3-goal-exposure",
       "hops": 3,
-      "question": "Which company initiative is exposed by ENG-4501 slipping, and who owns it?",
+      "question": "Which company initiative is exposed if ENG-4501 slips? Return the initiative id.",
       "needs_identity_join": false,
       "note": "ticket -> project -> initiative -> owner. Linear can nest within itself, but there is no single query that walks issue to initiative, so the arm pages projects and initiatives and joins locally.",
       "answer_bytes": 32,
@@ -214,14 +214,14 @@
     {
       "qid": "T3-at-risk-owners",
       "hops": 3,
-      "question": "Across urgent in-flight work, which initiatives are exposed and who is reviewing?",
+      "question": "Across every urgent in-flight ticket, which company initiatives are exposed? Return only the initiative ids.",
       "needs_identity_join": true,
       "note": "The widest question in the set: tickets, projects, initiatives, PRs and reviewers.",
-      "answer_bytes": 66,
+      "answer_bytes": 156,
       "per_tool": {
         "calls": 6,
-        "bytes": 16216,
-        "waste": 245.7,
+        "bytes": 16378,
+        "waste": 105.0,
         "plan": [
           "linear.issues(filter:{priority:urgent})",
           "linear.projects",
@@ -234,13 +234,13 @@
       "graph": {
         "calls": 1,
         "bytes": 3778,
-        "waste": 57.2,
+        "waste": 24.2,
         "plan": [
           "numen.get_delayed_projects()"
         ]
       },
       "calls_ratio": 6.0,
-      "bytes_ratio": 4.29
+      "bytes_ratio": 4.34
     }
   ]
 }

@@ -93,14 +93,22 @@ def linear_initiatives() -> list[dict]:
 
 
 def github_pulls() -> list[dict]:
-    """GitHub REST pull objects. The task link exists only inside the text."""
+    """GitHub REST pull objects.
+
+    The branch carries the Linear key, which is how Linear's own GitHub
+    integration expects teams to work (`alice/eng-4501-...`). Modelling it
+    this way is deliberately generous to the per-tool arm: without the key in
+    the branch the link would not be discoverable from GitHub at all, and the
+    comparison would prove nothing except that the data is missing.
+    """
     return [
         {
             "number": pr["num"],
             "title": pr["title"],
             "state": pr["state"],
             "user": _github_user(pr["author"]),
-            "head": {"ref": pr["branch"]},
+            "head": {"ref": f"{pr['task_key'].lower()}/{pr['branch']}"
+                     if pr.get("task_key") else pr["branch"]},
             "additions": pr["additions"],
             "deletions": pr["deletions"],
             "created_at": pr["created_at"],

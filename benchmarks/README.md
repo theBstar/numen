@@ -18,9 +18,14 @@ deterministic: same input, same numbers, every time. Results are written to
 Experiment 3 calls a model and is **not** part of `make bench`:
 
 ```bash
-export LLM_API_KEY=...          # or LLM_BASE_URL for a local server
-python3 -m benchmarks.run_agent_accuracy --runs 5
+pip install claude-agent-sdk
+python3 -m benchmarks.run_agent_accuracy --runs 3
+python3 -m benchmarks.run_agent_accuracy --runs 3 --only T3-goal-exposure   # one question
 ```
+
+It authenticates through the local Claude Code installation, so it needs no
+API key, but it does spend usage - the published run was 42 sessions for
+$4.53.
 
 ## Layout
 
@@ -33,7 +38,8 @@ python3 -m benchmarks.run_agent_accuracy --runs 5
 | `questions.py` | Seven questions by hop count, each with a hand-written oracle plan per arm. |
 | `run_derivability.py` | Experiment 1. |
 | `run_retrieval_cost.py` | Experiment 2. |
-| `run_agent_accuracy.py` | Experiment 3 harness. Unrun. |
+| `arms_mcp.py` | The two tool surfaces as in-process MCP servers, for experiment 3. |
+| `run_agent_accuracy.py` | Experiment 3. Claude Agent SDK, graded by set equality. |
 
 ## Design rules
 
@@ -49,8 +55,12 @@ should.
 **Publish the losses.** Zero-hop parity and the email-everywhere result both
 argue against needing a graph. They are in the headline table, not a footnote.
 
-**No number without a run.** Experiment 3 is unrun, so no accuracy figure
-appears anywhere.
+**Keep tool parity.** Both arms get the filters their real counterparts
+support. An early version left the per-tool list endpoints argument-less, so
+the baseline dumped sixty issues per call; those numbers were thrown away.
+
+**Publish contradictions.** Experiment 3 refuted experiment 2's cost
+prediction. That is in the headline of BENCHMARK.md, not a footnote.
 
 ## Changing it
 

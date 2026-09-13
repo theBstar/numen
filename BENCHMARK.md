@@ -12,16 +12,25 @@ including the cases where the answer is "nothing".
 |---|---|
 | Experiment 1 - identity derivability | **Run.** Deterministic, no model. |
 | Experiment 2 - retrieval cost | **Run.** Deterministic, no model. |
-| Experiment 3 - agent answer accuracy | **Not run.** Harness only - it needs an API key and spends money. No number in this document comes from it. |
+| Experiment 3 - agent answer accuracy | **Run.** Claude Sonnet 5 via the Claude Agent SDK, 3 runs per question per arm, 42 sessions, $4.53. |
 
-Everything below is reproducible with `make bench`. No network, no key, no
-Docker.
+Experiments 1 and 2 are reproducible with `make bench` - no network, no key,
+no Docker. Experiment 3 needs the Claude Agent SDK and spends usage.
+
+**Experiment 3 contradicts part of experiment 2.** That is the most useful
+thing in this document and it is dealt with directly below rather than buried.
 
 ## The headline, stated fairly
 
-**A context graph does not make your data fresher. It makes cross-source
-questions cheaper and identity reliable - and only when your estate is
-messy.**
+**A context graph does not make your data fresher, and it did not make
+anything cheaper once the per-tool servers were allowed to filter. What it
+bought was fewer round trips and one clearly better answer on the deepest
+question.**
+
+The modelled prediction was that the graph pulls about 3x fewer bytes. Run
+against a real model, the graph arm cost **1.9x more** than the per-tool arm.
+Section "Experiment 3" explains why, and it is a fault in the graph's tool
+design rather than in the idea.
 
 Freshness is the graph's weakness, not its strength. A live Notion MCP call
 sees the document edited ten seconds ago; a synced graph does not. In this
@@ -93,25 +102,85 @@ can answer goal questions at all.
 | Hops | Questions | Calls (per-tool / graph) | Bytes (per-tool / graph) | Bytes ratio |
 |---|---|---|---|---|
 | 0 | 2 | 2 / 2 | 4,846 / 4,846 | **1.00x** |
-| 1 | 1 | 2 / 1 | 6,396 / 354 | 18.07x |
-| 2 | 2 | 8 / 2 | 15,780 / 6,625 | 2.38x |
-| 3 | 2 | 9 / 2 | 23,783 / 4,861 | 4.89x |
-| **all** | **7** | **21 / 7** | **50,805 / 16,686** | **3.04x** |
+| 1 | 1 | 2 / 1 | 6,558 / 697 | 9.41x |
+| 2 | 2 | 8 / 2 | 15,987 / 7,013 | 2.28x |
+| 3 | 2 | 9 / 2 | 23,945 / 4,861 | 4.93x |
+| **all** | **7** | **21 / 7** | **51,336 / 17,417** | **2.95x** |
 
 **At zero hops the two are identical** - byte for byte, because both are one
 filtered call against one source. The graph adds nothing to "what are the
 urgent tickets", and at that tier the per-tool arm is strictly better, because
 it is live and the graph is as fresh as its last sync.
 
-**The crossover is the first cross-source hop.** "Which pull request
-implements ENG-4501" costs 18x more bytes through per-tool MCPs, because
-GitHub has no index on Linear keys: the only way to find the link is to pull
-every pull request and scan titles and branches locally. The graph stores that
-edge.
+**The crossover is the first cross-source hop.** "Which pull request implements
+ENG-4501" costs 9.4x more bytes through per-tool MCPs, because GitHub has no
+index on Linear keys: the only way to find the link is to pull every pull
+request and scan titles and branches locally. The graph stores that edge.
+
+The projected GitHub branches carry the Linear key (`eng-4501/feat/oauth-pkce`),
+which is the convention Linear's own GitHub integration expects. An earlier
+draft of these fixtures omitted it, which made the link undiscoverable from
+GitHub at all and inflated this row to 18x. Putting the key back is the
+generous reading and the honest one.
 
 Per-question detail is in `benchmarks/results/exp2_retrieval_cost.json`, and
 every plan is written out in `benchmarks/questions.py` so it can be argued
 with.
+
+## Experiment 3 - does any of this change the answer?
+
+**Method.** The same seven questions, the same model (Claude Sonnet 5), three
+runs per question per arm, 42 agent sessions in total. Both arms are served
+in-process from the identical projected fixtures through the Claude Agent
+SDK, so the only variable is the shape of the tools. Grading is set equality
+against a fixed answer key - no judge model, no partial credit.
+
+The per-tool arm's list endpoints take the same server-side filters the real
+Linear and GitHub MCP servers support. An earlier version of the harness left
+them argument-less, so the baseline dumped all sixty issues on every call;
+those numbers were discarded rather than published.
+
+**Results.**
+
+| | Per-tool MCP | Context graph |
+|---|---|---|
+| Accuracy | 18/20 (90%) | 20/21 (95%) |
+| Total cost | **$1.59** | $2.95 |
+| Tool calls, summed means | 51.2 | **30.7** |
+| Runs that crashed | 1 | 0 |
+
+Three things to take from that.
+
+**The cost prediction was wrong.** Experiment 2 said the graph pulls 2.95x
+fewer bytes; in practice it cost 1.9x more. The reason is a real design fault:
+the graph's tools are coarse. `numen_get_person_workload` returns every task
+*and* every pull request for a person whether or not the question needs both,
+while `linear_list_issues(assignee: alice.chen)` returns nine issues and
+nothing else. Once the per-tool endpoints can filter server side, "the graph
+pulls less" stops being true. Experiment 2 assumed a minimal joined subgraph
+on one side and whole collections on the other, and that assumption does not
+survive contact with filters. The fix is finer-grained graph tools that
+project only requested fields - not a different benchmark.
+
+**Round trips did hold up.** 30.7 versus 51.2. On the two join-heavy questions
+the gap is wide: finding the pull request for a ticket took the per-tool arm
+14.5 calls against 4.67, and one run spent 68 tool calls and hit the turn
+limit without answering. Fewer round trips means lower latency and fewer
+chances to go wrong, even when the token bill is higher.
+
+**Accuracy barely separated, except once.** 90% against 95% at three runs per
+cell is not a real difference. The exception is the question that matters:
+
+> Which company initiative is exposed if ENG-4501 slips?
+
+The per-tool arm answered `goal-platform-reliability` in two runs of three.
+That is not a refusal or a hedge - it is a specific, confident, wrong
+initiative, and nothing in the answer signals doubt. The graph arm got
+`goal-enterprise` three times out of three. This is the failure experiment 1
+predicts showing up in prose.
+
+The graph is not immune: on one run of the review-queue question it returned
+an empty list where the answer was two pull requests.
 
 ## Where the two experiments meet
 
@@ -138,7 +207,8 @@ above are a floor for the per-tool arm, not an estimate.
 ## Reproducing and arguing with it
 
 ```bash
-make bench
+make bench                                    # experiments 1 and 2, deterministic
+python3 -m benchmarks.run_agent_accuracy --runs 3   # experiment 3, needs the SDK
 ```
 
 The parts most open to challenge, and where to change them:
