@@ -13,7 +13,7 @@ verify: verify-backend verify-frontend
 
 verify-connectors:
 	ruff check src/connectors/
-	pytest tests/test_connectors/ -x -q 2>/dev/null || echo "No connector tests found"
+	pytest tests/test_connectors/ -x -q
 
 verify-graph:
 	ruff check src/graph/
@@ -25,23 +25,23 @@ verify-inference:
 
 verify-briefing:
 	ruff check src/briefing/
-	pytest tests/test_briefing/ -x -q 2>/dev/null || echo "No briefing tests found"
+	pytest tests/test_briefing/ -x -q
 
 verify-api:
 	ruff check src/api/
-	pytest tests/test_api/ -x -q 2>/dev/null || echo "No API tests found"
+	pytest tests/test_api/ -x -q
 
 verify-chat:
 	ruff check src/chat/
-	pytest tests/test_chat/ -x -q 2>/dev/null || echo "No chat tests found"
+	pytest tests/test_chat/ -x -q
 
 verify-llm:
 	ruff check src/llm/
-	pytest tests/test_llm/ -x -q 2>/dev/null || echo "No llm tests found"
+	pytest tests/test_llm/ -x -q
 
 verify-workers:
 	ruff check src/workers/
-	pytest tests/test_workers/ -x -q 2>/dev/null || echo "No worker tests found"
+	pytest tests/test_workers/ -x -q
 
 verify-mcp:
 	ruff check src/mcp/
