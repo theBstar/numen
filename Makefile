@@ -2,7 +2,7 @@
        verify-connectors verify-graph verify-inference verify-briefing \
        verify-api verify-chat verify-claude verify-workers verify-mcp \
        verify-agent verify-slack \
-       dev migrate new-migration deploy
+       bench dev migrate new-migration deploy
 
 # ── Full repo (cross-service changes only) ────────────────────────────
 
@@ -63,6 +63,14 @@ verify-backend:
 
 verify-frontend:
 	cd frontend && npx tsc --noEmit && npx eslint .
+
+# ── Benchmarks ────────────────────────────────────────────────────────
+# Deterministic: no model, no network, no database. See BENCHMARK.md.
+
+bench:
+	python3 -m benchmarks.run_derivability
+	@echo
+	python3 -m benchmarks.run_retrieval_cost
 
 # ── Hooks ─────────────────────────────────────────────────────────────
 
