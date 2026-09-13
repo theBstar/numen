@@ -87,6 +87,32 @@ Code, Cursor, and any MCP client tools over the joined graph. Per-tool MCP
 servers hand an agent three siloed APIs; this one hands it a graph where the
 joins, entity resolution, and urgency scoring are already done.
 
+## See it working before you connect anything
+
+Numen ships a demo organization - people, tasks, pull requests, deploys, goals,
+projects, and the edges between them. Seeding it needs no LLM key, no OAuth app,
+and no connected tool:
+
+```bash
+docker compose exec app python -m scripts.seed_demo
+docker compose exec app python scripts/bootstrap_admin.py you@example.com --org "Numen Demo"
+```
+
+The second command joins you to the demo org and prints its id along with an API
+key. The graph is queryable immediately:
+
+```bash
+curl -s http://localhost:8001/api/orgs/<org_id>/tasks \
+  -H "Authorization: Bearer numen_..."
+```
+
+The same key works against `http://localhost:8001/mcp/`. The MCP tools are graph
+queries, so an MCP client brings its own model and you can explore the demo graph
+from Claude Code or Cursor without configuring one here.
+
+Anything that reasons on Numen's side - `/api/ask`, briefings, the Slack surface -
+does need an LLM endpoint. See Configuration below.
+
 ## Why self-host
 
 Numen reads your team's tickets, code review, and conversations. That is exactly
